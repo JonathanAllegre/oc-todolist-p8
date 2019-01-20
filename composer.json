@@ -5,6 +5,7 @@
         "php": "^7.2.9",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "behat/behat": "^3.5",
         "phpmd/phpmd": "^2.6",
         "sensio/framework-extra-bundle": "^5.1",
         "squizlabs/php_codesniffer": "*",
