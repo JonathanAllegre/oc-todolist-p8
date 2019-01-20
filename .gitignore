@@ -2,6 +2,10 @@
 .php_cs.cache
 ###> symfony/framework-bundle ###
 /.env
+/public/img/
+/public/fonts/
+*.png
+*.ico
 /.env.test
 /public/bundles/
 /var/
