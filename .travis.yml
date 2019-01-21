@@ -4,8 +4,9 @@ php:
   - 7.2
 
 before_script:
-  - composer install
   - echo "APP_ENV=test" > .env
+  - composer install
+
 
 script:
   - bin/console phpunit
