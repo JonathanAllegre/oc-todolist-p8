@@ -9,4 +9,4 @@ before_script:
 
 
 script:
-  - bin/console phpunit
+  - bin/phpunit
