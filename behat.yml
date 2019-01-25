@@ -1,0 +1,13 @@
+default:
+    suites:
+        default:
+            contexts:
+                - FeatureContext:
+                    kernel: '@kernel'
+                - WebContext
+
+    extensions:
+        Behat\Symfony2Extension:
+            kernel:
+                bootstrap: features/bootstrap/bootstrap.php
+                class: App\Kernel
