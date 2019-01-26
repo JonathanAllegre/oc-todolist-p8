@@ -13,4 +13,7 @@ default:
                 class: App\Kernel
         Behat\MinkExtension:
             base_url: http://web:8080
+            browser_name: 'chrome'
             goutte: ~
+            selenium2:
+                wd_host: http://192.168.2.20:4444/wd/hub

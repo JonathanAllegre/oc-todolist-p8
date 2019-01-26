@@ -23,4 +23,13 @@ class WebContext extends \Behat\MinkExtension\Context\MinkContext
     {
         throw new \Behat\Behat\Tester\Exception\PendingException();
     }
+
+    /**
+     * @When I wait for :arg1 seconds
+     */
+    public function iWaitForSeconds($arg1)
+    {
+        $this->getSession()->wait($arg1 * 1000);
+    }
+
 }
