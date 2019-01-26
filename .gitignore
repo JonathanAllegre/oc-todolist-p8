@@ -3,6 +3,7 @@
 ###> symfony/framework-bundle ###
 /.env
 /public/img/
+/public/coverage/
 /public/fonts/
 *.png
 *.ico
