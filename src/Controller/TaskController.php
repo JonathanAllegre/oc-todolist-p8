@@ -25,7 +25,16 @@ class TaskController extends AbstractController
      */
     public function listAction()
     {
-        return $this->render('task/list.html.twig', ['tasks' => $this->getDoctrine()->getRepository(Task::class)->findAll()]);
+        return $this->render(
+            'task/list.html.twig',
+            [
+                'tasks' => $this
+                    ->getDoctrine()
+                    ->getRepository(
+                        Task::class
+                    )->findAll()
+            ]
+        );
     }
 
     /**
@@ -93,9 +102,9 @@ class TaskController extends AbstractController
      */
     public function deleteTaskAction(Task $task)
     {
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($task);
-        $em->flush();
+        $emanager = $this->getDoctrine()->getManager();
+        $emanager->remove($task);
+        $emanager->flush();
 
         $this->addFlash('success', 'La tâche a bien été supprimée.');
 
