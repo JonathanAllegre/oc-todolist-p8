@@ -23,6 +23,4 @@ class WebContext extends \Behat\MinkExtension\Context\MinkContext
     {
         throw new \Behat\Behat\Tester\Exception\PendingException();
     }
-
-
 }

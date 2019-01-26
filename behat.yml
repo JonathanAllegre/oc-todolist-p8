@@ -12,5 +12,5 @@ default:
                 bootstrap: features/bootstrap/bootstrap.php
                 class: App\Kernel
         Behat\MinkExtension:
-            base_url: http://172.25.0.5:8080
+            base_url: http://web:8080
             goutte: ~
