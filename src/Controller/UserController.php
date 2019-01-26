@@ -26,7 +26,15 @@ class UserController extends AbstractController
      */
     public function listAction()
     {
-        return $this->render('user/list.html.twig', ['users' => $this->getDoctrine()->getRepository(User::class)->findAll()]);
+        return $this->render(
+            'user/list.html.twig',
+            [
+                'users' => $this
+                    ->getDoctrine()
+                    ->getRepository(User::class)
+                    ->findAll()
+            ]
+        );
     }
 
     /**
@@ -40,12 +48,12 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+            $emanager = $this->getDoctrine()->getManager();
             $password = $encoder->encodePassword($user, $user->getPassword());
             $user->setPassword($password);
 
-            $em->persist($user);
-            $em->flush();
+            $emanager->persist($user);
+            $emanager->flush();
 
             $this->addFlash('success', "L'utilisateur a bien été ajouté.");
 
