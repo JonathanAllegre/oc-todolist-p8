@@ -15,18 +15,15 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class SecurityControllerTest extends WebTestCase
 {
-
-
     public function testIndex()
     {
-
         $this->loadFixtures(array(
             'App\DataFixtures\Tests\UserFixtures',
         ));
 
         $client = $this->makeClient();
         $this->logIn($client);
-        $crawler = $client->request('GET', '/security');
+        $client->request('GET', '/security');
         $this->assertStatusCode(200, $client);
     }
 
@@ -48,5 +45,4 @@ class SecurityControllerTest extends WebTestCase
         $cookie = new Cookie($session->getName(), $session->getId());
         $client->getCookieJar()->set($cookie);
     }
-
 }
