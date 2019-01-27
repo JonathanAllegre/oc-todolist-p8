@@ -8,8 +8,7 @@
 
 namespace App\Tests\Controller;
 
-
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Liip\FunctionalTestBundle\Test\WebTestCase;
 use \Symfony\Bundle\FrameworkBundle\Client as Client;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -17,19 +16,18 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 class SecurityControllerTest extends WebTestCase
 {
 
-    private $client;
-
-    public function setUp()
-    {
-        $this->client = static::createClient();
-    }
 
     public function testIndex()
     {
-        $this->logIn($this->client);
 
-        $client = $this->client->request('GET', '/security');
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->loadFixtures(array(
+            'App\DataFixtures\Tests\UserFixtures',
+        ));
+
+        $client = $this->makeClient();
+        $this->logIn($client);
+        $crawler = $client->request('GET', '/security');
+        $this->assertStatusCode(200, $client);
     }
 
     protected function logIn(Client $client)
