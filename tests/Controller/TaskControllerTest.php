@@ -2,19 +2,20 @@
 /**
  * Created by PhpStorm.
  * User: jonathan
- * Date: 2019-01-20
- * Time: 17:12
+ * Date: 2019-01-28
+ * Time: 19:22
  */
 
-namespace App\Tests;
+namespace App\Tests\Controller;
 
-use \Symfony\Bundle\FrameworkBundle\Client as Client;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\BrowserKit\Cookie;
+use Liip\FunctionalTestBundle\Test\WebTestCase;
+use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\BrowserKit\Cookie;
 
-class DefaultControllerTest extends WebTestCase
+class TaskControllerTest extends WebTestCase
 {
+
     /**
      * @var Client
      */
@@ -22,32 +23,36 @@ class DefaultControllerTest extends WebTestCase
 
     public function setUp()
     {
-        $this->client = static::createClient();
+        $this->client = $this->makeClient();
     }
 
     /**
-     * USER NOT LOGIN ASSERT 302
+     * ASSERT STATUS 200
      */
-    public function testIndexNoLogin()
+    public function testListAction()
     {
-        $this->client->request('GET', '/');
-        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
-        $this->client->followRedirect();
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-    }
+        // ASSERT WITH LOG OK
+        $this->login($this->client);
+        $crawler = $this->client->request('GET', '/tasks');
 
-    /**
-     * USER LOGIN ASSERT 200
-     */
-    public function testIndexWithLogin()
-    {
-        $this->logIn($this->client);
+        // ASSERT 200
+        $this->assertStatusCode(200, $this->client);
 
-        $crawler = $this->client->request('GET', '/');
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        // ASSERT HTML CONTAIN
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Bienvenue sur Todo List")')->count()
+            $crawler->filter('html:contains("Créer une tâche")')->count()
+        );
+
+        // ASSERT LOG KO
+        $this->client = $this->makeClient();
+        $this->client->request('GET', '/tasks');
+
+        $this->assertStatusCode(302, $this->client);
+        $crawler = $this->client->followRedirect();
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Nom d\'utilisateur :")')->count()
         );
     }
 
