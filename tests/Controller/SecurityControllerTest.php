@@ -17,10 +17,6 @@ class SecurityControllerTest extends WebTestCase
 {
     public function testIndex()
     {
-        $this->loadFixtures(array(
-            'App\DataFixtures\Tests\UserFixtures',
-        ));
-
         $client = $this->makeClient();
         $this->logIn($client);
         $client->request('GET', '/security');

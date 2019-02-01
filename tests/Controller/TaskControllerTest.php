@@ -87,13 +87,15 @@ class TaskControllerTest extends WebTestCase
         );
     }
 
-//    public function testEditAction()
-//    {
-//        // FIXTURES
-//
-//        $this->loadFixtures();
-//        $this->logIn($this->client);
-//    }
+    public function testEditAction()
+    {
+        // FIXTURES
+        $this->loadFixtures([
+            'App\DataFixtures\Tests\TaskFixtures',
+        ]);
+
+        $this->logIn($this->client);
+    }
 
     protected function logIn(Client $client)
     {
