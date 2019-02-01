@@ -87,6 +87,14 @@ class TaskControllerTest extends WebTestCase
         );
     }
 
+    public function testEditAction()
+    {
+        // FIXTURES
+
+        $this->loadFixtures();
+        $this->logIn($this->client);
+    }
+
     protected function logIn(Client $client)
     {
         $session = $client->getContainer()->get('session');
