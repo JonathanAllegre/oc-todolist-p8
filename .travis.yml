@@ -5,8 +5,7 @@ php:
 
 before_script:
   - echo "APP_ENV=test
-    DATABASE_URL=mysql://travis@127.0.0.1/todolistnew-test
-        " > .env
+    DATABASE_URL=mysql://travis@127.0.0.1/todolistnew-test" > .env
   - composer install
 
 
