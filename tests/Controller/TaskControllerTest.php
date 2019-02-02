@@ -8,8 +8,8 @@
 
 namespace App\Tests\Controller;
 
-use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\BrowserKit\Cookie;
 
@@ -23,7 +23,7 @@ class TaskControllerTest extends WebTestCase
 
     public function setUp()
     {
-        $this->client = $this->makeClient();
+        $this->client = static::createClient();
     }
 
     /**
@@ -36,7 +36,7 @@ class TaskControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', '/tasks');
 
         // ASSERT 200
-        $this->assertStatusCode(200, $this->client);
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         // ASSERT HTML CONTAIN
         $this->assertGreaterThan(
@@ -45,10 +45,10 @@ class TaskControllerTest extends WebTestCase
         );
 
         // ASSERT LOG KO
-        $this->client = $this->makeClient();
+        $this->client = static::createClient();
         $this->client->request('GET', '/tasks');
+        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
 
-        $this->assertStatusCode(302, $this->client);
         $crawler = $this->client->followRedirect();
         $this->assertGreaterThan(
             0,
@@ -62,7 +62,7 @@ class TaskControllerTest extends WebTestCase
         $crawler =  $this->client->request('GET', '/tasks/create');
 
         // ASSERT STATUS CODE 200
-        $this->assertStatusCode(200, $this->client);
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         // ASSERT HTML CONTAIN
         $this->assertGreaterThan(
@@ -89,11 +89,6 @@ class TaskControllerTest extends WebTestCase
 
     public function testEditAction()
     {
-        // FIXTURES
-        $this->loadFixtures([
-            'App\DataFixtures\Tests\TaskFixtures',
-        ]);
-
         $this->logIn($this->client);
     }
 

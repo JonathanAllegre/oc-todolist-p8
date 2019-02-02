@@ -8,19 +8,21 @@
 
 namespace App\Tests\Controller;
 
-use Liip\FunctionalTestBundle\Test\WebTestCase;
 use \Symfony\Bundle\FrameworkBundle\Client as Client;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class SecurityControllerTest extends WebTestCase
 {
+    private $client;
+
     public function testIndex()
     {
-        $client = $this->makeClient();
-        $this->logIn($client);
-        $client->request('GET', '/security');
-        $this->assertStatusCode(200, $client);
+        $this->client = static::createClient();
+        $this->logIn($this->client);
+        $this->client->request('GET', '/security');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     protected function logIn(Client $client)
