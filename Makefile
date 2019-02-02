@@ -1,4 +1,4 @@
-.PHONY: test install help test-coverage fixture-test db-create
+.PHONY: test install help test-coverage fixture-test database-create database-update go-travis
 .DEFAULT_GOAL= help
 
 CLASS=ALL
@@ -15,9 +15,12 @@ vendor: composer.lock
 
 install: vendor ## Lance l'installation de l'application
 
-db-create: install # Creer La bdd
+database-create: install ## Creer La bdd
 	php ./bin/console doctrine:database:create
 	php ./bin/console doctrine:schema:create
+
+database-update: ## Update la Base de donnée
+	php ./bin/console doctrine:schema:update
 
 fixture-test: install ## Lance les fixtures de test
 	php ./bin/console doctrine:fixture:load --group test --no-interaction
@@ -31,4 +34,4 @@ test-coverage: install fixture-test ## Lance PhpUnit With Coverage HTML
 test-filter: install fixture-test ## Lance tests with filter [CLASS=YourClassTest] [METHOD=testYourMethod]
 	php ./bin/phpunit --filter $(CLASS)::$(METHOD)
 
-go-travis: db-create test ## Make TravisCI Jobs
+go-travis: database-create test ## Make TravisCI Jobs
