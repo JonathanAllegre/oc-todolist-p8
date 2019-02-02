@@ -78,7 +78,6 @@ class TaskControllerTest extends WebTestCase
         $form['task[content]'] = "Le Contenu";
 
         $crawler = $this->client->submit($form);
-
         $crawler = $this->client->followRedirect();
 
         $this->assertGreaterThan(
@@ -89,6 +88,7 @@ class TaskControllerTest extends WebTestCase
 
     public function testEditAction()
     {
+
         $this->logIn($this->client);
     }
 
