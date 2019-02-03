@@ -35,3 +35,11 @@ Feature: TaskPage
     Then I should see "Superbe ! La tâche a bien été modifiée."
     And I should see "task test behat modifié"
 
+  Scenario: ToggleTask
+    Given I am on homepage
+    When I fill in "_username" with "jonathan"
+    And I fill in "password" with "test"
+    And I press "Se connecter"
+    Given I am on "/tasks"
+    When I press "task-1"
+    Then I should see "Superbe ! La tâche task test behat modifié a bien été marquée comme faite."
