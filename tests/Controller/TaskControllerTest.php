@@ -135,6 +135,24 @@ class TaskControllerTest extends WebTestCase
         );
     }
 
+    public function testDeleteTaskAction()
+    {
+        $this->login($this->client);
+
+        $crawler = $this->client->request('GET', '/tasks/1/delete');
+        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+
+        $crawler = $this->client->followRedirect();
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        $this->assertGreaterThan(
+            0,
+            $crawler
+                ->filter('html:contains("Superbe ! La tâche a bien été supprimée.")')
+                ->count()
+        );
+    }
+
     protected function logIn(Client $client)
     {
         $session = $client->getContainer()->get('session');
