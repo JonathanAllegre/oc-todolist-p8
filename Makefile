@@ -50,6 +50,6 @@ test-filter: install fixture-test ## Lance tests with filter [CLASS=YourClassTes
 	php ./bin/phpunit --filter $(CLASS)::$(METHOD)
 
 behat: install fixture-test ## Lance les test fonctionnel Behat
-	php ./vendor/bin/behat
+	APP_ENV=test ./vendor/bin/behat
 
 go-travis: database-create test ## Make TravisCI Jobs

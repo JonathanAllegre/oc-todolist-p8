@@ -7,7 +7,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class TaskFixtures extends Fixture  implements FixtureGroupInterface
+class TaskFixtures extends Fixture implements FixtureGroupInterface
 {
     /**
      * @param ObjectManager $manager
@@ -17,7 +17,7 @@ class TaskFixtures extends Fixture  implements FixtureGroupInterface
     {
         $task = (new Task())
             ->setTitle('Une Tache de test')
-            ->setContent('Le Contenu de ma tache')
+            ->setContent('Le Contenu de ma tache de test')
             ->setCreatedAt(new \DateTime());
 
         $manager->persist($task);

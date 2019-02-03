@@ -38,4 +38,14 @@ Feature: HomePage
     And I should see "Retour à la liste des tâches"
     And I should see "Ajouter"
     And I should see "Se Déconnecter"
+    
+  Scenario: Click on Consulter la liste des taches
+    Given I am on the homepage
+    When I fill in "username" with "jonathan"
+    And I fill in "password" with "test"
+    And I press "Se connecter"
+    When I follow "Consulter la liste des tâches à faire"
+#    Then I should see "testBehat"
+    And I should see "Le Contenu de ma tache de test"
+    
 

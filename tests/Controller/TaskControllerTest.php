@@ -88,8 +88,36 @@ class TaskControllerTest extends WebTestCase
 
     public function testEditAction()
     {
-
         $this->logIn($this->client);
+        $crawler = $this->client->request('GET', "/tasks/1/edit");
+
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Le Contenu de ma tache de test")')->count()
+        );
+
+        // MODIF FORM
+        $form = $crawler->selectButton("Modifier")->form();
+
+        $form['task[title]']   = "Ma Tache de test modifié";
+        $form['task[content]'] = "Le Contenu de test modifié";
+
+        $crawler = $this->client->submit($form);
+        $crawler = $this->client->followRedirect();
+
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        echo $this->client->getResponse()->getContent();
+
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Le Contenu de test modifié")')->count()
+        );
+
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Superbe ! La tâche a bien été modifiée.")')->count()
+        );
     }
 
     protected function logIn(Client $client)
