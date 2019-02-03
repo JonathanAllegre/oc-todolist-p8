@@ -107,7 +107,6 @@ class TaskControllerTest extends WebTestCase
         $crawler = $this->client->followRedirect();
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        echo $this->client->getResponse()->getContent();
 
         $this->assertGreaterThan(
             0,
@@ -117,6 +116,29 @@ class TaskControllerTest extends WebTestCase
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Superbe ! La tâche a bien été modifiée.")')->count()
+        );
+    }
+
+    public function testToogleTaskAction()
+    {
+        $this->logIn($this->client);
+        $crawler = $this->client->request('GET', "/tasks/1/toggle");
+        $crawler = $this->client->followRedirect();
+
+        // Toggle Task "Marquer comme Faite"
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Marquer non terminée")')->count()
+        );
+
+        $crawler = $this->client->request('GET', "/tasks/1/toggle");
+        $crawler = $this->client->followRedirect();
+
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Marquer comme faite")')->count()
         );
     }
 
