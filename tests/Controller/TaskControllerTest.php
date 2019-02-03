@@ -129,16 +129,9 @@ class TaskControllerTest extends WebTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Marquer non terminée")')->count()
-        );
-
-        $crawler = $this->client->request('GET', "/tasks/1/toggle");
-        $crawler = $this->client->followRedirect();
-
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('html:contains("Marquer comme faite")')->count()
+            $crawler
+                ->filter('html:contains("Superbe ! La tâche Ma Tache de test modifié a bien été marquée comme faite.")')
+                ->count()
         );
     }
 
