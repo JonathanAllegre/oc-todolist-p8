@@ -52,4 +52,7 @@ test-filter: install fixture-test ## Lance tests with filter [CLASS=YourClassTes
 behat: install fixture-test ## Lance les test fonctionnel Behat
 	APP_ENV=test ./vendor/bin/behat
 
+behat-filter: install fixture-test ## Run Behat test only with @filter tag
+	APP_ENV=test ./vendor/bin/behat --tags @filter
+
 go-travis: database-create test ## Make TravisCI Jobs
