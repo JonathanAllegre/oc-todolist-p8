@@ -43,3 +43,12 @@ Feature: TaskPage
     Given I am on "/tasks"
     When I press "task-1"
     Then I should see "Superbe ! La tâche task test behat modifié a bien été marquée comme faite."
+
+  Scenario:
+    Given I am on homepage
+    When I fill in "_username" with "jonathan"
+    And I fill in "password" with "test"
+    And I press "Se connecter"
+    Given I am on "/tasks"
+    When I press "del-button-task1"
+    Then I should see "Superbe ! La tâche a bien été supprimée."
