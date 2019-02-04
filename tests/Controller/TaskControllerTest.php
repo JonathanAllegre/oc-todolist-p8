@@ -71,7 +71,6 @@ class TaskControllerTest extends WebTestCase
         );
 
         // ADD TASK
-
         $form = $crawler->selectButton('Ajouter')->form();
 
         $form['task[title]'] = "Ma Tache";

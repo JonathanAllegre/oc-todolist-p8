@@ -1,6 +1,14 @@
 Feature: UserPage
 
-
-  Scenario: 
+  Scenario: UusersList
     Given I am on "/users"
     Then should see "Liste des utilisateurs"
+
+  Scenario: UserCreate
+    Given I am on "/users/create"
+    When I fill in "user_username" with "userBehatTest"
+    And I fill in "user_password_first" with "test"
+    And I fill in "user_password_second" with "test"
+    And I fill in "user_email" with "test@testBehat.com"
+    And I press "Ajouter"
+    Then I should see "Superbe ! L'utilisateur a bien été ajouté."
