@@ -13,8 +13,6 @@ Feature: UserPage
     And I press "Ajouter"
     Then I should see "Superbe ! L'utilisateur a bien été ajouté."
 
-
-  @filter
   Scenario: UserEdit
     Given I am on "/users/2/edit"
     When I fill in "user_username" with "testModifBehate"
