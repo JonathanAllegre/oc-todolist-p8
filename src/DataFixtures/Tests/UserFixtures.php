@@ -29,8 +29,12 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
      */
     public function load(ObjectManager $manager)
     {
-        $userOne = $this->newUser('jonathan', 'test', 'admin.admin@snowtrick.test');
-        $manager -> persist($userOne);
+        $user = $this->newUser('jonathan', 'test', 'admin.admin@snowtrick.test');
+        $manager -> persist($user);
+        $manager -> flush();
+
+        $user = $this->newUser('userTestForEdit', 'test', 'testEdit.admin@snowtrick.test');
+        $manager -> persist($user);
         $manager -> flush();
     }
 

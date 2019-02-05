@@ -43,7 +43,6 @@ class UserControllerTest extends WebTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         // FILL FORM
-        // ADD TASK
         $form = $crawler->selectButton('Ajouter')->form();
 
         $form['user[username]'] = "UtilisateurTest";
@@ -63,4 +62,31 @@ class UserControllerTest extends WebTestCase
         );
     }
 
+    public function testEditAction()
+    {
+        $crawler = $this->client->request('GET', "/users/2/edit");
+
+        $this->assertGreaterThan(
+            0,
+            $crawler
+                ->filter('html:contains("Modifier userTestForEdit")')
+                ->count()
+        );
+
+        // FILL FORM
+        $form = $crawler->selectButton('Modifier')->form();
+
+        $form['user[username]'] = "UtilisateurTestModifié";
+        $crawler = $this->client->submit($form);
+        $crawler = $this->client->followRedirect();
+
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        $this->assertGreaterThan(
+            0,
+            $crawler
+                ->filter('html:contains("Superbe ! L\'utilisateur a bien été modifié")')
+                ->count()
+        );
+    }
 }

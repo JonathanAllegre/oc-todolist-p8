@@ -12,3 +12,13 @@ Feature: UserPage
     And I fill in "user_email" with "test@testBehat.com"
     And I press "Ajouter"
     Then I should see "Superbe ! L'utilisateur a bien été ajouté."
+
+
+  @filter
+  Scenario: UserEdit
+    Given I am on "/users/2/edit"
+    When I fill in "user_username" with "testModifBehate"
+    And I press "Modifier"
+    Then I should see "L'utilisateur a bien été modifié"
+    
+
