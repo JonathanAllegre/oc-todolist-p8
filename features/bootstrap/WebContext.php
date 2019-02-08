@@ -31,5 +31,4 @@ class WebContext extends \Behat\MinkExtension\Context\MinkContext
     {
         $this->getSession()->wait($arg1 * 1000);
     }
-
 }
