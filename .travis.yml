@@ -4,9 +4,7 @@ php:
   - 7.2
 
 before_script:
-  - echo "APP_ENV=test" > .env
-  - composer install
-
+  - mv .env.travis.test .env
 
 script:
-  - bin/phpunit
+  - make go-travis

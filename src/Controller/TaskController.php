@@ -11,16 +11,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class TaskController extends AbstractController
 {
     /**
-     * @Route("/task", name="task")
-     */
-    public function index()
-    {
-        return $this->render('task/index.html.twig', [
-            'controller_name' => 'TaskController',
-        ]);
-    }
-
-    /**
      * @Route("/tasks", name="task_list")
      */
     public function listAction()
@@ -70,7 +60,7 @@ class TaskController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
             $this->addFlash('success', 'La tâche a bien été modifiée.');
