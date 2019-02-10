@@ -30,7 +30,7 @@ class TaskService
 
         //dd($user);
 
-        $this->saveTaskService($task);
+        $this->saveNewTaskService($task);
 
         return $task;
     }
@@ -38,7 +38,7 @@ class TaskService
     /**
      * @param Task $task
      */
-    public function saveTaskService(Task $task): void
+    public function saveNewTaskService(Task $task): void
     {
         $this->manager->persist($task);
         $this->manager->flush();

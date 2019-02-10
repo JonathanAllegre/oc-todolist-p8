@@ -20,8 +20,11 @@ database-create: install ## Creer La bdd
 	php ./bin/console doctrine:database:create
 	php ./bin/console doctrine:schema:create
 
-database-update: ## Update la Base de donnée
-	php ./bin/console doctrine:schema:update
+database-update:database-update-test ## Update la Base de donnée
+	php ./bin/console doctrine:schema:update --force --env dev
+
+database-update-test: ## Update la Base de donnée
+	php ./bin/console doctrine:schema:update --force --env test
 
 cc: cc-test cc-prod cc-dev ## Clear All Cache
 
