@@ -14,7 +14,6 @@ use Symfony\Component\Security\Core\Security;
 
 class TaskService
 {
-
     private $manager;
     private $security;
 
@@ -27,9 +26,7 @@ class TaskService
     public function createNewTask(Task $task): Task
     {
         $user = $this->security->getUser();
-
-        //dd($user);
-
+        $task->setUser($user);
         $this->saveNewTaskService($task);
 
         return $task;

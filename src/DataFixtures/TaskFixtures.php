@@ -15,7 +15,6 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 class TaskFixtures extends Fixture implements FixtureGroupInterface
 {
-
     public function load(ObjectManager $manager)
     {
         $task = (new Task())

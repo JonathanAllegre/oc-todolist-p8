@@ -8,6 +8,7 @@
 
 namespace App\Tests\Controller;
 
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
 
@@ -64,12 +65,18 @@ class UserControllerTest extends WebTestCase
 
     public function testEditAction()
     {
-        $crawler = $this->client->request('GET', "/users/2/edit");
+        $user = $this
+            ->getContainer()
+            ->get('doctrine')
+            ->getRepository(User::class)
+            ->findOneByUsername('jonathan-test');
+
+        $crawler = $this->client->request('GET', "/users/". $user->getId(). "/edit");
 
         $this->assertGreaterThan(
             0,
             $crawler
-                ->filter('html:contains("Modifier userTestForEdit")')
+                ->filter('html:contains("Modifier jonathan-test")')
                 ->count()
         );
 
@@ -88,5 +95,18 @@ class UserControllerTest extends WebTestCase
                 ->filter('html:contains("Superbe ! L\'utilisateur a bien été modifié")')
                 ->count()
         );
+    }
+
+    private function getContainer()
+    {
+        self::bootKernel();
+
+        // returns the real and unchanged service container
+        $container = self::$kernel->getContainer();
+
+        // gets the special container that allows fetching private services
+        $container = self::$container;
+
+        return $container;
     }
 }
