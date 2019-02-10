@@ -10,27 +10,37 @@ namespace App\Services;
 
 use App\Entity\Task;
 use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\Security\Core\Security;
 
 class TaskService
 {
 
     private $manager;
+    private $security;
 
-    public function __construct(ObjectManager $manager)
+    public function __construct(Security $security, ObjectManager $manager)
     {
-        $this->manager = $manager;
+        $this->manager  = $manager;
+        $this->security = $security;
+    }
+
+    public function createNewTask(Task $task): Task
+    {
+        $user = $this->security->getUser();
+
+        //dd($user);
+
+        $this->saveTaskService($task);
+
+        return $task;
     }
 
     /**
      * @param Task $task
-     * @return Task
      */
-    public function saveNeTaskService(Task $task): Task
+    public function saveTaskService(Task $task): void
     {
         $this->manager->persist($task);
         $this->manager->flush();
-
-        return $task;
-
     }
 }
