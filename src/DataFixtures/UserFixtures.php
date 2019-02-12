@@ -13,14 +13,19 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Security;
 
 class UserFixtures extends Fixture implements FixtureGroupInterface
 {
     private $encoder;
+    private $manager;
 
-    public function __construct(UserPasswordEncoderInterface $encoder)
+    public const ANONYMOUS_USER = 'anonymous-user';
+
+    public function __construct(UserPasswordEncoderInterface $encoder, ObjectManager $manager)
     {
         $this->encoder = $encoder;
+        $this->manager = $manager;
     }
 
     /**
@@ -29,9 +34,10 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
      */
     public function load(ObjectManager $manager)
     {
-        $userOne = $this->newUser('jonathan', 'test', 'admin.admin@snowtrick.test');
-        $manager -> persist($userOne);
-        $manager -> flush();
+        $this->newUser('jonathan', 'test', 'admin.admin@snowtrick.test');
+        $anonymous = $this->newUser('Anonymous', 'test', 'anonymous@anonymous.com');
+
+        $this->addReference(self::ANONYMOUS_USER, $anonymous);
     }
 
     /**
@@ -44,9 +50,13 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
     public function newUser($name, $pass, $mail):User
     {
         $user = new User();
-        $user->setUsername($name);
-        $user->setPassword($this->encoder->encodePassword($user, $pass));
-        $user->setEmail($mail);
+        $user
+            ->setUsername($name)
+            ->setPassword($this->encoder->encodePassword($user, $pass))
+            ->setEmail($mail);
+
+        $this->manager->persist($user);
+        $this->manager->flush();
 
         return $user;
     }
