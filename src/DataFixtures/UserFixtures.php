@@ -22,6 +22,11 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
 
     public const ANONYMOUS_USER = 'anonymous-user';
 
+    /**
+     * UserFixtures constructor.
+     * @param UserPasswordEncoderInterface $encoder
+     * @param ObjectManager $manager
+     */
     public function __construct(UserPasswordEncoderInterface $encoder, ObjectManager $manager)
     {
         $this->encoder = $encoder;

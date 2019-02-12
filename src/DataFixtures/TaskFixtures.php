@@ -18,24 +18,49 @@ use Symfony\Component\Security\Core\Security;
 class TaskFixtures extends Fixture implements FixtureGroupInterface, DependentFixtureInterface
 {
     private $security;
+    private $manager;
 
-    public function __construct(Security $security)
+    /**
+     * TaskFixtures constructor.
+     * @param Security $security
+     * @param ObjectManager $manager
+     */
+    public function __construct(Security $security, ObjectManager $manager)
     {
         $this->security = $security;
+        $this->manager  = $manager;
     }
 
+    /**
+     * @param ObjectManager $manager
+     * @throws \Exception
+     */
     public function load(ObjectManager $manager)
     {
-        $task = (new Task())
-            ->setContent('Une tache')
-            ->setTitle('Un titre')
-            ->setCreatedAt(new \DateTime())
-            ->setUser($this->getReference(UserFixtures::ANONYMOUS_USER));
-
-        $manager->persist($task);
-        $manager->flush();
+        $this->createNewTask('Une Tâche de Test', 'Le contenue de ma tâche');
+        $this->createNewTask('Une 2nd Tâche de Test', 'Le contenue de ma 2nd Tâche');
     }
 
+    /**
+     * @param string $title
+     * @param string $content
+     */
+    public function createNewTask(string $title, string $content)
+    {
+        $task = new Task();
+        $task
+            ->setTitle($title)
+            ->setContent($content)
+            ->setUser($this->getReference(UserFixtures::ANONYMOUS_USER))
+            ->setCreatedAt(new \DateTime());
+
+        $this->manager->persist($task);
+        $this->manager->flush();
+    }
+
+    /**
+     * @return array
+     */
     public static function getGroups(): array
     {
         return ['devprod'];
@@ -47,7 +72,7 @@ class TaskFixtures extends Fixture implements FixtureGroupInterface, DependentFi
      *
      * @return array
      */
-    public function getDependencies()
+    public function getDependencies(): array
     {
         return [
            UserFixtures::class
