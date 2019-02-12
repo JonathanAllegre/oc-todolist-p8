@@ -11,21 +11,19 @@ namespace App\Services;
 use App\Entity\Task;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class TaskService
 {
     private $manager;
-    private $security;
 
-    public function __construct(Security $security, ObjectManager $manager)
+    public function __construct(ObjectManager $manager)
     {
         $this->manager  = $manager;
-        $this->security = $security;
     }
 
-    public function createNewTask(Task $task): Task
+    public function createNewTask(UserInterface $user, Task $task): Task
     {
-        $user = $this->security->getUser();
         $task->setUser($user);
         $this->saveNewTaskService($task);
 
