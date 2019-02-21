@@ -50,8 +50,10 @@ class UserControllerTest extends WebTestCase
         $form['user[password][first]'] = "test";
         $form['user[password][second]'] = "test";
         $form['user[email]'] = "test@test.com";
+        $form['user[roles][1]'] = "ROLE_USER";
 
-        $crawler = $this->client->submit($form);
+
+        $this->client->submit($form);
         $crawler = $this->client->followRedirect();
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
@@ -84,7 +86,8 @@ class UserControllerTest extends WebTestCase
         $form = $crawler->selectButton('Modifier')->form();
 
         $form['user[username]'] = "UtilisateurTestModifié";
-        $crawler = $this->client->submit($form);
+
+        $this->client->submit($form);
         $crawler = $this->client->followRedirect();
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());

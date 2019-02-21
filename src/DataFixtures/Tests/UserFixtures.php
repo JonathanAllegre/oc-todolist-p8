@@ -29,15 +29,15 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
      */
     public function load(ObjectManager $manager)
     {
-        $user = $this->newUser('jonathan', 'test', 'admin.admin@snowtrick.test');
+        $user = $this->newUser('jonathan', 'test', 'admin.admin@snowtrick.test', ['ROLE_USER']);
         $manager -> persist($user);
         $manager -> flush();
 
-        $user = $this->newUser('jonathan-test', 'test', 'admin.adminjk@snowtrick.test');
+        $user = $this->newUser('jonathan-test', 'test', 'admin.adminjk@snowtrick.test', ['ROLE_USER']);
         $manager -> persist($user);
         $manager -> flush();
 
-        $user = $this->newUser('userTestForEdit', 'test', 'testEdit.admin@snowtrick.test');
+        $user = $this->newUser('userTestForEdit', 'test', 'testEdit.admin@snowtrick.test', ['ROLE_USER']);
         $manager -> persist($user);
         $manager -> flush();
     }
@@ -49,12 +49,13 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
      * @return User
      * @throws \Exception
      */
-    public function newUser($name, $pass, $mail):User
+    public function newUser($name, $pass, $mail, $roles):User
     {
         $user = new User();
-        $user->setUsername($name);
-        $user->setPassword($this->encoder->encodePassword($user, $pass));
-        $user->setEmail($mail);
+        $user->setPassword($this->encoder->encodePassword($user, $pass))
+            ->setUsername($name)
+            ->setEmail($mail)
+            ->setRoles($roles);
 
         return $user;
     }
