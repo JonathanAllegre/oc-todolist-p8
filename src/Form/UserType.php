@@ -31,6 +31,7 @@ class UserType extends AbstractType
                     ],
                     'multiple' => true,
                     'expanded' => true,
+                    'label' => "Rôles",
                 ])
             ->add('email', EmailType::class, ['label' => 'Adresse email'])
         ;
