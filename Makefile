@@ -20,8 +20,11 @@ database-create: install ## Creer La bdd
 	php ./bin/console doctrine:database:create
 	php ./bin/console doctrine:schema:create
 
-database-update: ## Update la Base de donnée
-	php ./bin/console doctrine:schema:update
+database-update:database-update-test ## Update la Base de donnée
+	php ./bin/console doctrine:schema:update --force --env dev
+
+database-update-test: ## Update la Base de donnée
+	php ./bin/console doctrine:schema:update --force --env test
 
 cc: cc-test cc-prod cc-dev ## Clear All Cache
 
@@ -35,10 +38,10 @@ cc-prod: ## Clear Cache prod
 	rm -rf ./var/cache/prod
 
 fixture-test: install ## Lance les fixtures de test dans la bdd test
-	php ./bin/console doctrine:fixture:load --group test --no-interaction --env test --purge-with-truncate
+	php ./bin/console doctrine:fixture:load --group test --no-interaction --env test
 
 fixture: install ## Installe les fixture dans la bdd
-	php ./bin/console doctrine:fixture:load --group devprod --no-interaction --purge-with-truncate
+	php ./bin/console doctrine:fixture:load --group devprod --no-interaction
 
 test: install fixture-test ## Lance phpUnit
 	php ./bin/phpunit

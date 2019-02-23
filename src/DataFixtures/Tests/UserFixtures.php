@@ -33,6 +33,10 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
         $manager -> persist($user);
         $manager -> flush();
 
+        $user = $this->newUser('jonathan-test', 'test', 'admin.adminjk@snowtrick.test');
+        $manager -> persist($user);
+        $manager -> flush();
+
         $user = $this->newUser('userTestForEdit', 'test', 'testEdit.admin@snowtrick.test');
         $manager -> persist($user);
         $manager -> flush();

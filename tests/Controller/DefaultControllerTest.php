@@ -6,7 +6,7 @@
  * Time: 17:12
  */
 
-namespace App\Tests;
+namespace App\Tests\Controller;
 
 use \Symfony\Bundle\FrameworkBundle\Client as Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;

@@ -22,6 +22,30 @@ class TaskFixtures extends Fixture implements FixtureGroupInterface
 
         $manager->persist($task);
         $manager->flush();
+
+        $task = (new Task())
+            ->setTitle('TaskTestToogle')
+            ->setContent('Le Contenu de ma tache de test toggle')
+            ->setCreatedAt(new \DateTime());
+
+        $manager->persist($task);
+        $manager->flush();
+
+        $task = (new Task())
+            ->setTitle('TaskTestEdit')
+            ->setContent('Le Contenu de ma tache de test Edit')
+            ->setCreatedAt(new \DateTime());
+
+        $manager->persist($task);
+        $manager->flush();
+
+        $task = (new Task())
+            ->setTitle('TaskTestDelete')
+            ->setContent('Le Contenu de ma tache de test Delete')
+            ->setCreatedAt(new \DateTime());
+
+        $manager->persist($task);
+        $manager->flush();
     }
 
     /**

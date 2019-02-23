@@ -8,6 +8,8 @@
 
 namespace App\Tests\Controller;
 
+use App\Entity\Task;
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -88,7 +90,14 @@ class TaskControllerTest extends WebTestCase
     public function testEditAction()
     {
         $this->logIn($this->client);
-        $crawler = $this->client->request('GET', "/tasks/1/edit");
+
+        $task = $this
+            ->getContainer()
+            ->get('doctrine')
+            ->getRepository(Task::class)
+            ->findOneByTitle('TaskTestEdit');
+
+        $crawler = $this->client->request('GET', "/tasks/". $task->getId() ."/edit");
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertGreaterThan(
@@ -121,7 +130,14 @@ class TaskControllerTest extends WebTestCase
     public function testToogleTaskAction()
     {
         $this->logIn($this->client);
-        $crawler = $this->client->request('GET', "/tasks/1/toggle");
+
+        $task = $this
+            ->getContainer()
+            ->get('doctrine')
+            ->getRepository(Task::class)
+            ->findOneByTitle('TaskTestToogle');
+
+        $crawler = $this->client->request('GET', "/tasks/". $task->getId(). "/toggle");
         $crawler = $this->client->followRedirect();
 
         // Toggle Task "Marquer comme Faite"
@@ -129,7 +145,7 @@ class TaskControllerTest extends WebTestCase
         $this->assertGreaterThan(
             0,
             $crawler
-                ->filter('html:contains("Superbe ! La tâche Ma Tache de test modifié a bien été marquée comme faite.")')
+                ->filter('html:contains("Superbe ! La tâche TaskTestToogle a bien été marquée comme faite.")')
                 ->count()
         );
     }
@@ -138,7 +154,13 @@ class TaskControllerTest extends WebTestCase
     {
         $this->login($this->client);
 
-        $crawler = $this->client->request('GET', '/tasks/1/delete');
+        $task = $this
+            ->getContainer()
+            ->get('doctrine')
+            ->getRepository(Task::class)
+            ->findOneByTitle('TaskTestDelete');
+
+        $crawler = $this->client->request('GET', '/tasks/'. $task->getId() .'/delete');
         $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
 
         $crawler = $this->client->followRedirect();
@@ -163,11 +185,30 @@ class TaskControllerTest extends WebTestCase
 
         // you may need to use a different token class depending on your application.
         // for example, when using Guard authentication you must instantiate PostAuthenticationGuardToken
-        $token = new UsernamePasswordToken('jonathan', null, $firewallName, array('ROLE_USER'));
+        $user = $this
+            ->getContainer()
+            ->get('doctrine')
+            ->getRepository(User::class)
+            ->findOneByUsername('jonathan-test');
+
+        $token = new UsernamePasswordToken($user, 'test', $firewallName, $user->getRoles());
         $session->set('_security_'.$firewallContext, serialize($token));
         $session->save();
 
         $cookie = new Cookie($session->getName(), $session->getId());
         $client->getCookieJar()->set($cookie);
+    }
+
+    private function getContainer()
+    {
+        self::bootKernel();
+
+        // returns the real and unchanged service container
+        $container = self::$kernel->getContainer();
+
+        // gets the special container that allows fetching private services
+        $container = self::$container;
+
+        return $container;
     }
 }

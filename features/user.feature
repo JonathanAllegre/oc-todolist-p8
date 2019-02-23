@@ -14,7 +14,9 @@ Feature: UserPage
     Then I should see "Superbe ! L'utilisateur a bien été ajouté."
 
   Scenario: UserEdit
-    Given I am on "/users/2/edit"
+    Given I am on "/users"
+    When I follow "Edit"
+    Then I should see "Nom d'utilisateur"
     When I fill in "user_username" with "testModifBehate"
     And I press "Modifier"
     Then I should see "L'utilisateur a bien été modifié"
