@@ -46,6 +46,10 @@ class Task
      */
     private $isDone;
 
+    /**
+     * Task constructor.
+     * @throws \Exception
+     */
     public function __construct()
     {
         $this->createdAt = new \Datetime();

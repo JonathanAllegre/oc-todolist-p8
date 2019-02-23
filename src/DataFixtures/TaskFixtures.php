@@ -44,6 +44,7 @@ class TaskFixtures extends Fixture implements FixtureGroupInterface, DependentFi
     /**
      * @param string $title
      * @param string $content
+     * @throws \Exception
      */
     public function createNewTask(string $title, string $content)
     {

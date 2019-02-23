@@ -38,8 +38,9 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
      */
     public function load(ObjectManager $manager)
     {
-        $this->newUser('jonathan', 'test', 'admin.admin@snowtrick.test', ['ROLE_USER']);
-        $anonymous = $this->newUser('Anonymous', 'test', 'anonymous@anonymous.com', ['ROLE_USER']);
+        $this->newUser('user', 'test', 'user.user@snowtrick.test', ['ROLE_USER']);
+        $this->newUser('admin', 'test', 'admin.admin@snowtrick.test', ['ROLE_ADMIN']);
+        $anonymous = $this->newUser('anonymous', 'test', 'anonymous@anonymous.com', ['ROLE_ANONYMOUS']);
 
         $this->addReference(self::ANONYMOUS_USER, $anonymous);
     }

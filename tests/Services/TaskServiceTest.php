@@ -11,6 +11,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class TaskServiceTest extends KernelTestCase
 {
+    /**
+     * @throws \Exception
+     */
     public function testCreateNewtask()
     {
         $user = $this

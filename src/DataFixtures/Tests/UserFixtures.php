@@ -40,6 +40,18 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
         $user = $this->newUser('userTestForEdit', 'test', 'testEdit.admin@snowtrick.test', ['ROLE_USER']);
         $manager -> persist($user);
         $manager -> flush();
+
+        $user = $this->newUser('user', 'test', 'user.user@user.test', ['ROLE_USER']);
+        $manager -> persist($user);
+        $manager -> flush();
+
+        $user = $this->newUser('admin', 'admin', 'admin.admin@admin.test', ['ROLE_ADMIN']);
+        $manager -> persist($user);
+        $manager -> flush();
+
+        $user = $this->newUser('anonymous', 'anonymous', 'anonymous.anonymous@anonymous.test', ['ROLE_ANONYMOUS']);
+        $manager -> persist($user);
+        $manager -> flush();
     }
 
     /**
