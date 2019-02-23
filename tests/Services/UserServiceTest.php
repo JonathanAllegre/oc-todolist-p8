@@ -16,7 +16,6 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserServiceTest extends KernelTestCase
 {
-
     public function testCreate()
     {
         // MOCK OBJECT MANAGER
@@ -59,8 +58,6 @@ class UserServiceTest extends KernelTestCase
     private function getContainer()
     {
         self::bootKernel();
-        // returns the real and unchanged service container
-        $container = self::$kernel->getContainer();
         // gets the special container that allows fetching private services
         $container = self::$container;
 
@@ -82,5 +79,4 @@ class UserServiceTest extends KernelTestCase
 
         return new UserService($manager, $encoder);
     }
-
 }

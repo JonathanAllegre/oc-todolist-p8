@@ -67,6 +67,7 @@ class UserControllerTest extends WebTestCase
 
     public function testEditAction()
     {
+
         $user = $this
             ->getContainer()
             ->get('doctrine')
@@ -103,10 +104,6 @@ class UserControllerTest extends WebTestCase
     private function getContainer()
     {
         self::bootKernel();
-
-        // returns the real and unchanged service container
-        $container = self::$kernel->getContainer();
-
         // gets the special container that allows fetching private services
         $container = self::$container;
 

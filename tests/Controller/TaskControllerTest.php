@@ -78,7 +78,7 @@ class TaskControllerTest extends WebTestCase
         $form['task[title]'] = "Ma Tache";
         $form['task[content]'] = "Le Contenu";
 
-        $crawler = $this->client->submit($form);
+        $this->client->submit($form);
         $crawler = $this->client->followRedirect();
 
         $this->assertGreaterThan(
@@ -111,7 +111,7 @@ class TaskControllerTest extends WebTestCase
         $form['task[title]']   = "Ma Tache de test modifié";
         $form['task[content]'] = "Le Contenu de test modifié";
 
-        $crawler = $this->client->submit($form);
+        $this->client->submit($form);
         $crawler = $this->client->followRedirect();
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
@@ -137,7 +137,7 @@ class TaskControllerTest extends WebTestCase
             ->getRepository(Task::class)
             ->findOneByTitle('TaskTestToogle');
 
-        $crawler = $this->client->request('GET', "/tasks/". $task->getId(). "/toggle");
+        $this->client->request('GET', "/tasks/". $task->getId(). "/toggle");
         $crawler = $this->client->followRedirect();
 
         // Toggle Task "Marquer comme Faite"
@@ -160,7 +160,7 @@ class TaskControllerTest extends WebTestCase
             ->getRepository(Task::class)
             ->findOneByTitle('TaskTestDelete');
 
-        $crawler = $this->client->request('GET', '/tasks/'. $task->getId() .'/delete');
+        $this->client->request('GET', '/tasks/'. $task->getId() .'/delete');
         $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
 
         $crawler = $this->client->followRedirect();
@@ -202,10 +202,6 @@ class TaskControllerTest extends WebTestCase
     private function getContainer()
     {
         self::bootKernel();
-
-        // returns the real and unchanged service container
-        $container = self::$kernel->getContainer();
-
         // gets the special container that allows fetching private services
         $container = self::$container;
 
