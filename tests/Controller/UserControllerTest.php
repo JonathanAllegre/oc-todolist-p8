@@ -100,7 +100,6 @@ class UserControllerTest extends WebTestCase
 
     public function testEditAction()
     {
-
         $user = $this
             ->getContainer()
             ->get('doctrine')

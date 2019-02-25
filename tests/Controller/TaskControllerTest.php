@@ -45,17 +45,6 @@ class TaskControllerTest extends WebTestCase
             0,
             $crawler->filter('html:contains("Créer une tâche")')->count()
         );
-
-        // ASSERT LOG KO
-        $this->client = static::createClient();
-        $this->client->request('GET', '/tasks');
-        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
-
-        $crawler = $this->client->followRedirect();
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('html:contains("Nom d\'utilisateur :")')->count()
-        );
     }
 
     public function testCreateAction()
