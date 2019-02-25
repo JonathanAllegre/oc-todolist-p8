@@ -38,7 +38,7 @@ class TaskController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $taskService->createNewTask($this->getUser(), $task);
+            $taskService->createNewTask($task);
 
             $this->addFlash('success', 'La tâche a été bien été ajoutée.');
 

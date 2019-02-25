@@ -13,6 +13,7 @@ use App\Services\UserService;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Security;
 
 class UserServiceTest extends KernelTestCase
 {
@@ -68,6 +69,7 @@ class UserServiceTest extends KernelTestCase
     {
         $manager = $this->getContainer()->get(ObjectManager::class);
         $encoder = $this->getContainer()->get(UserPasswordEncoderInterface::class);
+        $security = $this->getContainer()->get(Security::class);
 
         if (isset($mock['objectManager'])) {
             $manager = $mock['objectManager'];
@@ -77,6 +79,6 @@ class UserServiceTest extends KernelTestCase
             $encoder = $mock['encoder'];
         }
 
-        return new UserService($manager, $encoder);
+        return new UserService($manager, $encoder, $security);
     }
 }
