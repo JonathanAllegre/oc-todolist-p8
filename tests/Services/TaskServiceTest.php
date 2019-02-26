@@ -20,7 +20,7 @@ class TaskServiceTest extends KernelTestCase
         // TEST CREATE TASK WITH USR LOGED IN
 
         // GET AN USER FOR MOCK
-        $user = $this->getAnUserByUsername('userTestOne');
+        $user = $this->getAnUserByUsername('user');
         // MOCK OBJECT MANAGER
         $manager = $this->createMock(ObjectManager::class);
         $manager
@@ -42,7 +42,7 @@ class TaskServiceTest extends KernelTestCase
         $return = $taskService->createNewTask($this->getParamsForCreateNewTask());
 
         $this->assertInstanceOf(UserInterface::class, $return->getUser());
-        $this->assertEquals('userTestOne', $return->getUser()->getUsername());
+        $this->assertEquals('user', $return->getUser()->getUsername());
 
 
         // TEST CREATE TASK WITH NO USER LOGED IN
@@ -76,7 +76,7 @@ class TaskServiceTest extends KernelTestCase
 
     public function testDeleteTask()
     {
-        $taskService = $this->initService();
+        //$taskService = $this->initService();
 
         //$taskService->deleteTask()
 

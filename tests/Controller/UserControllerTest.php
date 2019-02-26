@@ -104,7 +104,7 @@ class UserControllerTest extends WebTestCase
             ->getContainer()
             ->get('doctrine')
             ->getRepository(User::class)
-            ->findOneByUsername('jonathan-test');
+            ->findOneByUsername('UserForEditaction');
 
         // ASSERT 302 -> Login WITHOUT ADMIN AUTH
         $this->client->request('GET', "/users/". $user->getId(). "/edit");
@@ -123,7 +123,7 @@ class UserControllerTest extends WebTestCase
         $this->assertGreaterThan(
             0,
             $crawler
-                ->filter('html:contains("Modifier jonathan-test")')
+                ->filter('html:contains("Modifier UserForEditaction")')
                 ->count()
         );
 

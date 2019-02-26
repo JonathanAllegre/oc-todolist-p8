@@ -17,7 +17,7 @@ class TaskFixtures extends Fixture implements FixtureGroupInterface, DependentFi
     public function load(ObjectManager $manager)
     {
         $task = (new Task())
-            ->setTitle('Une Tache de test')
+            ->setTitle('TaskForListAction')
             ->setContent('Le Contenu de ma tache de test')
             ->setCreatedAt(new \DateTime())
             ->setUser($this->getReference(UserFixtures::ANONYMOUS_USER));
@@ -26,8 +26,8 @@ class TaskFixtures extends Fixture implements FixtureGroupInterface, DependentFi
         $manager->flush();
 
         $task = (new Task())
-            ->setTitle('TaskTestToogle')
-            ->setContent('Le Contenu de ma tache de test toggle')
+            ->setTitle('TaskForEditaction')
+            ->setContent('Le Contenu de ma tache de test')
             ->setCreatedAt(new \DateTime())
             ->setUser($this->getReference(UserFixtures::ANONYMOUS_USER));
 
@@ -35,8 +35,8 @@ class TaskFixtures extends Fixture implements FixtureGroupInterface, DependentFi
         $manager->flush();
 
         $task = (new Task())
-            ->setTitle('TaskTestEdit')
-            ->setContent('Le Contenu de ma tache de test Edit')
+            ->setTitle('TaskForToggleAction')
+            ->setContent('Le Contenu de ma tache de test')
             ->setCreatedAt(new \DateTime())
             ->setUser($this->getReference(UserFixtures::ANONYMOUS_USER));
 
@@ -44,38 +44,8 @@ class TaskFixtures extends Fixture implements FixtureGroupInterface, DependentFi
         $manager->flush();
 
         $task = (new Task())
-            ->setTitle('TaskTestDelete')
-            ->setContent('Le Contenu de ma tache de test Delete')
-            ->setCreatedAt(new \DateTime())
-            ->setUser($this->getReference(UserFixtures::ANONYMOUS_USER));
-
-        $manager->persist($task);
-        $manager->flush();
-
-        // TASK ADMIN
-        $task = (new Task())
-            ->setTitle('TaskAdmin')
-            ->setContent('Le Contenu de ma tache de test Role Admin')
-            ->setCreatedAt(new \DateTime())
-            ->setUser($this->getReference(UserFixtures::ADMIN_USER));
-
-        $manager->persist($task);
-        $manager->flush();
-
-        // TASK USER
-        $task = (new Task())
-            ->setTitle('TaskUser')
-            ->setContent('Le Contenu de ma tache de test Role User')
-            ->setCreatedAt(new \DateTime())
-            ->setUser($this->getReference(UserFixtures::USER_USER));
-
-        $manager->persist($task);
-        $manager->flush();
-
-        // TASK ANONYMOUS
-        $task = (new Task())
-            ->setTitle('TaskAnonymous')
-            ->setContent('Le Contenu de ma tache de test Role Anonyme')
+            ->setTitle('TaskForDeleteAction')
+            ->setContent('Le Contenu de ma tache de test')
             ->setCreatedAt(new \DateTime())
             ->setUser($this->getReference(UserFixtures::ANONYMOUS_USER));
 

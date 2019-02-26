@@ -35,9 +35,6 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
      */
     public function load(ObjectManager $manager)
     {
-        $this->newUser('userTestOne', 'test', 'admin.admin@snowtrick.test', ['ROLE_USER']);
-        $this->newUser('jonathan-test', 'test', 'admin.adminjk@snowtrick.test', ['ROLE_USER']);
-        $this->newUser('userTestForEdit', 'test', 'testEdit.admin@snowtrick.test', ['ROLE_USER']);
         $user = $this->newUser('user', 'test', 'user.user@user.test', ['ROLE_USER']);
         $admin = $this->newUser('admin', 'admin', 'admin.admin@admin.test', ['ROLE_ADMIN']);
         $anonymous = $this->newUser('anonymous', 'anonymous', 'anonymous.anonymous@anonymous.test', ['ROLE_ANONYMOUS']);
@@ -45,6 +42,9 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
         $this->addReference(self::ANONYMOUS_USER, $anonymous);
         $this->addReference(self::ADMIN_USER, $admin);
         $this->addReference(self::USER_USER, $user);
+
+        // USER FOR FUNCTIONAL TEST
+        $this->newUser('UserForEditaction', 'test', 'UserForEditaction.user@user.test', ['ROLE_USER']);
     }
 
     /**

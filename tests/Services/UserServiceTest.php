@@ -35,6 +35,7 @@ class UserServiceTest extends KernelTestCase
 
         $result = $userService->create((new User())->setPassword('test'));
 
+        // ONLY CHECK IF PASSWORD IS ENCODED
         $this->assertNotEquals('test', $result->getPassword());
     }
 
@@ -53,6 +54,7 @@ class UserServiceTest extends KernelTestCase
 
         $result = $userService->edit((new User())->setPassword('test'));
 
+        // ONLY CHECK IF PASSWORD IS ENCODED
         $this->assertNotEquals('test', $result->getPassword());
     }
 
