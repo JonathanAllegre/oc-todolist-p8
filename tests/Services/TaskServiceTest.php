@@ -20,7 +20,7 @@ class TaskServiceTest extends KernelTestCase
         // TEST CREATE TASK WITH USR LOGED IN
 
         // GET AN USER FOR MOCK
-        $user = $this->getAnUserByUsername('jonathan');
+        $user = $this->getAnUserByUsername('userTestOne');
         // MOCK OBJECT MANAGER
         $manager = $this->createMock(ObjectManager::class);
         $manager
@@ -38,11 +38,11 @@ class TaskServiceTest extends KernelTestCase
             ->method('getCurrentUser')
             ->willReturn($user);
 
-        $taskService = new TaskService($manager, $userService);
+        $taskService = $this->initService(['objectManager' => $manager, 'userService' => $userService]);
         $return = $taskService->createNewTask($this->getParamsForCreateNewTask());
 
         $this->assertInstanceOf(UserInterface::class, $return->getUser());
-        $this->assertEquals('jonathan', $return->getUser()->getUsername());
+        $this->assertEquals('userTestOne', $return->getUser()->getUsername());
 
 
         // TEST CREATE TASK WITH NO USER LOGED IN
@@ -67,14 +67,43 @@ class TaskServiceTest extends KernelTestCase
             ->method('getAnonymousUser')
             ->willReturn($this->getAnUserByUsername('anonymous'));
 
-        $taskService = new TaskService($manager, $userService);
+        $taskService = $this->initService(['objectManager' => $manager, 'userService' => $userService]);
         $return = $taskService->createNewTask($this->getParamsForCreateNewTask());
 
         $this->assertInstanceOf(UserInterface::class, $return->getUser());
         $this->assertEquals('anonymous', $return->getUser()->getUsername());
     }
 
-    private function getContainer()
+    public function testDeleteTask()
+    {
+        $taskService = $this->initService();
+
+        //$taskService->deleteTask()
+
+
+    }
+
+    protected function initService(array $mock = null): TaskService
+    {
+        $objectManager = $this->getContainer()->get(ObjectManager::class);
+        $userService = $this->getContainer()->get(UserService::class);
+
+        if (isset($mock['objectManager'])) {
+            $objectManager = $mock['objectManager'];
+        }
+
+        if (isset($mock['userService'])) {
+            $userService = $mock['userService'];
+        }
+
+        $taskService = new TaskService($objectManager, $userService);
+
+        return $taskService;
+
+    }
+
+
+    protected function getContainer()
     {
         self::bootKernel();
         // gets the special container that allows fetching private services
@@ -83,12 +112,11 @@ class TaskServiceTest extends KernelTestCase
         return $container;
     }
 
-    // PARAMS
     /**
      * @return Task
      * @throws \Exception
      */
-    public function getParamsForCreateNewTask(): Task
+    protected function getParamsForCreateNewTask(): Task
     {
         return (new Task())
             ->setUser(null)
@@ -97,12 +125,11 @@ class TaskServiceTest extends KernelTestCase
             ->setContent('Contenu de ma tache de test');
     }
 
-
     /**
      * @param string $username
      * @return User
      */
-    public function getAnUserByUsername(string $username): User
+    protected function getAnUserByUsername(string $username): User
     {
         $user = $this
                 ->getContainer()

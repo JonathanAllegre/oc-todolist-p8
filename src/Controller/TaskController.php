@@ -87,8 +87,9 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{id}/delete", name="task_delete")
      */
-    public function deleteTaskAction(Task $task)
+    public function deleteTaskAction(Task $task, TaskService $taskService)
     {
+        $delete = $taskService->deleteTask($task);
         $emanager = $this->getDoctrine()->getManager();
         $emanager->remove($task);
         $emanager->flush();

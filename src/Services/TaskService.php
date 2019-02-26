@@ -39,4 +39,11 @@ class TaskService
 
         return $task;
     }
+
+    public function deleteTask(Task $task)
+    {
+        // WE GET THE CURRENT USER
+        $currentUser = $this->userService->getCurrentUser();
+        //dd($currentUser);
+    }
 }
