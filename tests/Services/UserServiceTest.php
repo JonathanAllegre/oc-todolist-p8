@@ -17,6 +17,7 @@ use Symfony\Component\Security\Core\Security;
 
 class UserServiceTest extends KernelTestCase
 {
+
     public function testCreate()
     {
         // MOCK OBJECT MANAGER
@@ -38,7 +39,6 @@ class UserServiceTest extends KernelTestCase
         // ONLY CHECK IF PASSWORD IS ENCODED
         $this->assertNotEquals('test', $result->getPassword());
     }
-
     public function testEdit()
     {
         // MOCK OBJECT MANAGER
@@ -66,7 +66,6 @@ class UserServiceTest extends KernelTestCase
 
         return $container;
     }
-
     public function initService(array $mock = null): UserService
     {
         $manager = $this->getContainer()->get(ObjectManager::class);

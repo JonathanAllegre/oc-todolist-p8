@@ -59,7 +59,6 @@ class UserControllerTest extends WebTestCase
 
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
-
     public function testCreateAction()
     {
         // ASSERT 302 -> Login WITHOUT ADMIN AUTH
@@ -97,7 +96,6 @@ class UserControllerTest extends WebTestCase
                 ->count()
         );
     }
-
     public function testEditAction()
     {
         $user = $this
@@ -145,6 +143,7 @@ class UserControllerTest extends WebTestCase
         );
     }
 
+    // LOGIN
     private function getContainer()
     {
         self::bootKernel();
@@ -153,7 +152,6 @@ class UserControllerTest extends WebTestCase
 
         return $container;
     }
-
     protected function logIn(Client $client, string $username)
     {
         $session = $client->getContainer()->get('session');

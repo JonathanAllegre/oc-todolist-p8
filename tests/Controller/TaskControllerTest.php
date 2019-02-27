@@ -28,9 +28,6 @@ class TaskControllerTest extends WebTestCase
         $this->client = static::createClient();
     }
 
-    /**
-     * ASSERT STATUS 200
-     */
     public function testListAction()
     {
         $crawler = $this->client->request('GET', '/tasks');
@@ -44,7 +41,6 @@ class TaskControllerTest extends WebTestCase
             $crawler->filter('html:contains("Créer une tâche")')->count()
         );
     }
-
     public function testCreateAction()
     {
         // TEST CREATE ACTION WITH USER NOT LIGGED IN
@@ -98,7 +94,6 @@ class TaskControllerTest extends WebTestCase
             $crawler->filter('html:contains("Superbe ! La tâche a été bien été ajoutée.")')->count()
         );
     }
-
     public function testEditAction()
     {
         $this->logIn($this->client);
@@ -138,7 +133,6 @@ class TaskControllerTest extends WebTestCase
             $crawler->filter('html:contains("Superbe ! La tâche a bien été modifiée.")')->count()
         );
     }
-
     public function testToogleTaskAction()
     {
         $this->logIn($this->client);
@@ -161,7 +155,6 @@ class TaskControllerTest extends WebTestCase
                 ->count()
         );
     }
-
     public function testDeleteTaskAction()
     {
         $this->login($this->client);
@@ -186,6 +179,7 @@ class TaskControllerTest extends WebTestCase
         );
     }
 
+    // LOGIN
     protected function logIn(Client $client)
     {
         $session = $client->getContainer()->get('session');
@@ -210,7 +204,6 @@ class TaskControllerTest extends WebTestCase
         $cookie = new Cookie($session->getName(), $session->getId());
         $client->getCookieJar()->set($cookie);
     }
-
     private function getContainer()
     {
         self::bootKernel();
