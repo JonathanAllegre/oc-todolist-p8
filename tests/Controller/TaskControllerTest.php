@@ -33,8 +33,6 @@ class TaskControllerTest extends WebTestCase
      */
     public function testListAction()
     {
-        // ASSERT WITH LOG OK
-        $this->login($this->client);
         $crawler = $this->client->request('GET', '/tasks');
 
         // ASSERT 200
@@ -49,6 +47,31 @@ class TaskControllerTest extends WebTestCase
 
     public function testCreateAction()
     {
+        // TEST CREATE ACTION WITH USER NOT LIGGED IN
+        $crawler =  $this->client->request('GET', '/tasks/create');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        // ASSERT HTML CONTAIN
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Title")')->count()
+        );
+
+        // ADD TASK
+        $form = $crawler->selectButton('Ajouter')->form();
+
+        $form['task[title]'] = "Ma Tache";
+        $form['task[content]'] = "Le Contenu";
+
+        $this->client->submit($form);
+        $crawler = $this->client->followRedirect();
+
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Superbe ! La tâche a été bien été ajoutée.")')->count()
+        );
+
+        //TEST CREATE WITH USER LOGGED IN
         $this->login($this->client);
         $crawler =  $this->client->request('GET', '/tasks/create');
 
@@ -84,7 +107,7 @@ class TaskControllerTest extends WebTestCase
             ->getContainer()
             ->get('doctrine')
             ->getRepository(Task::class)
-            ->findOneByTitle('TaskTestEdit');
+            ->findOneByTitle('TaskForEditaction');
 
         $crawler = $this->client->request('GET', "/tasks/". $task->getId() ."/edit");
 
@@ -97,7 +120,7 @@ class TaskControllerTest extends WebTestCase
         // MODIF FORM
         $form = $crawler->selectButton("Modifier")->form();
 
-        $form['task[title]']   = "Ma Tache de test modifié";
+        $form['task[title]']   = "MaTacheTestModifié";
         $form['task[content]'] = "Le Contenu de test modifié";
 
         $this->client->submit($form);
@@ -124,7 +147,7 @@ class TaskControllerTest extends WebTestCase
             ->getContainer()
             ->get('doctrine')
             ->getRepository(Task::class)
-            ->findOneByTitle('TaskTestToogle');
+            ->findOneByTitle('TaskForToggleAction');
 
         $this->client->request('GET', "/tasks/". $task->getId(). "/toggle");
         $crawler = $this->client->followRedirect();
@@ -134,7 +157,7 @@ class TaskControllerTest extends WebTestCase
         $this->assertGreaterThan(
             0,
             $crawler
-                ->filter('html:contains("Superbe ! La tâche TaskTestToogle a bien été marquée comme faite.")')
+                ->filter('html:contains("Superbe ! La tâche TaskForToggleAction a bien été marquée comme faite.")')
                 ->count()
         );
     }
@@ -147,7 +170,7 @@ class TaskControllerTest extends WebTestCase
             ->getContainer()
             ->get('doctrine')
             ->getRepository(Task::class)
-            ->findOneByTitle('TaskTestDelete');
+            ->findOneByTitle('TaskForDeleteAction');
 
         $this->client->request('GET', '/tasks/'. $task->getId() .'/delete');
         $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
@@ -178,7 +201,7 @@ class TaskControllerTest extends WebTestCase
             ->getContainer()
             ->get('doctrine')
             ->getRepository(User::class)
-            ->findOneByUsername('jonathan-test');
+            ->findOneByUsername('anonymous');
 
         $token = new UsernamePasswordToken($user, 'test', $firewallName, $user->getRoles());
         $session->set('_security_'.$firewallContext, serialize($token));
