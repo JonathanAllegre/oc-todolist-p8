@@ -71,6 +71,12 @@ class TaskService
         // GET TASK USER
         $taskUser = $task->getUser();
 
+        if (null !== $currentUser
+            && 'anonymous' === $taskUser->getUsername()
+            && 'admin'=== $currentUser->getUsername()) {
+            return true;
+        }
+
         if (null !== $currentUser && $currentUser->getId() === $taskUser->getId()) {
             return true;
         }

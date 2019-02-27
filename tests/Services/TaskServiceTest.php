@@ -12,10 +12,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class TaskServiceTest extends KernelTestCase
 {
-
-    /**
-     * @throws \Exception
-     */
     public function testCreateNewtask()
     {
         // TEST CREATE TASK WITH USR LOGED IN
@@ -76,13 +72,10 @@ class TaskServiceTest extends KernelTestCase
         $this->assertInstanceOf(UserInterface::class, $return->getUser());
         $this->assertEquals('anonymous', $return->getUser()->getUsername());
     }
-
-    /**
-     * @throws \Exception
-     */
     public function testDeleteTask()
     {
-        $task = $this->createNewTask();
+        $user = $this->createNewUser(45, 'usertest', ['ROLE_USER']);
+        $task = $this->createNewTask(45, $user, 'le contenu', 'Le Titre');
 
         ################## TEST WITH TASK USER = LOGGED USER ####################################@
         // MOCK CURRENT USER
@@ -125,7 +118,7 @@ class TaskServiceTest extends KernelTestCase
 
         $this->assertFalse($taskService->deleteTask($task));
 
-        ################## TEST WITH  NO USER LOGGED IN ####################################@
+        ################## TEST WITH NO USER LOGGED IN ####################################@
         // MOCK CURRENT USER
         $userservice = $this->createMock(UserService::class);
         $userservice
@@ -139,9 +132,28 @@ class TaskServiceTest extends KernelTestCase
         ]);
 
         $this->assertFalse($taskService->deleteTask($task));
+
+
+        ################## TEST WITH  LOGGED USER = ADMIN & TASKUSER = anonymous ####################
+        $user = $this->createNewUser(789, 'anonymous', ['ROLE_ANONYMOUS']);
+        $task = $this->createNewTask(78, $user, 'LeCOntenu', 'LeTitle');
+
+        // MOCK CURRENT USER
+        $userservice = $this->createMock(UserService::class);
+        $userservice
+            ->expects($this->any())
+            ->method('getCurrentUser')
+            ->willReturn($this->createNewUser(45, 'admin', ['ROLE_ADMIN']));
+
+        $taskService = $this->initService([
+            'userService' => $userservice,
+            'objectManager' => $manager
+        ]);
+
+        $this->assertTrue($taskService->deleteTask($task));
     }
 
-
+    // INIT CLASS
     protected function initService(array $mock = null): TaskService
     {
         $objectManager = $this->getContainer()->get(ObjectManager::class);
@@ -167,10 +179,8 @@ class TaskServiceTest extends KernelTestCase
 
         return $container;
     }
-    /**
-     * @return Task
-     * @throws \Exception
-     */
+
+    // PARAMETERS
     protected function getParamsForCreateNewTask(): Task
     {
         return (new Task())
@@ -179,10 +189,6 @@ class TaskServiceTest extends KernelTestCase
             ->setTitle('Ma Tache de Test qui tes unit')
             ->setContent('Contenu de ma tache de test');
     }
-    /**
-     * @param string $username
-     * @return User
-     */
     protected function getAnUserByUsername(string $username): User
     {
         $user = $this
@@ -194,21 +200,17 @@ class TaskServiceTest extends KernelTestCase
         return $user;
     }
 
-    /**
-     * @return Task
-     * @throws \Exception
-     */
-    protected function createNewTask()
+    // MOCK
+    protected function createNewTask($id, $user, $content, $title)
     {
         $task = (new Task())
-            ->setUser($this->createNewUser(45, 'usertest', ['ROLE_USER']))
-            ->setId(789)
-            ->setContent('Le COntenu')
-            ->setTitle('Un Titre de test');
+            ->setUser($user)
+            ->setId($id)
+            ->setContent($content)
+            ->setTitle($title);
 
         return $task;
     }
-
     protected function createNewUser($id, $username, $roles): User
     {
         $user = (new User())
