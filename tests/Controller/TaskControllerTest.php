@@ -10,7 +10,6 @@ namespace App\Tests\Controller;
 
 use App\Entity\Task;
 use App\Entity\User;
-use App\Repository\TaskRepository;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -48,6 +47,31 @@ class TaskControllerTest extends WebTestCase
 
     public function testCreateAction()
     {
+        // TEST CREATE ACTION WITH USER NOT LIGGED IN
+        $crawler =  $this->client->request('GET', '/tasks/create');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        // ASSERT HTML CONTAIN
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Title")')->count()
+        );
+
+        // ADD TASK
+        $form = $crawler->selectButton('Ajouter')->form();
+
+        $form['task[title]'] = "Ma Tache";
+        $form['task[content]'] = "Le Contenu";
+
+        $this->client->submit($form);
+        $crawler = $this->client->followRedirect();
+
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Superbe ! La tâche a été bien été ajoutée.")')->count()
+        );
+
+        //TEST CREATE WITH USER LOGGED IN
         $this->login($this->client);
         $crawler =  $this->client->request('GET', '/tasks/create');
 
