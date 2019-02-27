@@ -93,6 +93,8 @@ class TaskController extends AbstractController
 
         if ($delete) {
             $this->addFlash('success', 'La tâche a bien été supprimée.');
+
+            return $this->redirectToRoute('task_list');
         }
 
         $this->addFlash('error', 'Une erreur s\'est produite lors de la suppression');
