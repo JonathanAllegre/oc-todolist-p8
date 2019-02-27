@@ -12,6 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class TaskServiceTest extends KernelTestCase
 {
+
     /**
      * @throws \Exception
      */
@@ -41,6 +42,7 @@ class TaskServiceTest extends KernelTestCase
         $taskService = $this->initService(['objectManager' => $manager, 'userService' => $userService]);
         $return = $taskService->createNewTask($this->getParamsForCreateNewTask());
 
+        // ASSERT TASK NOW HAVE AN USER
         $this->assertInstanceOf(UserInterface::class, $return->getUser());
         $this->assertEquals('user', $return->getUser()->getUsername());
 
@@ -70,18 +72,75 @@ class TaskServiceTest extends KernelTestCase
         $taskService = $this->initService(['objectManager' => $manager, 'userService' => $userService]);
         $return = $taskService->createNewTask($this->getParamsForCreateNewTask());
 
+        // ASSERT TASK HAVE NOW A ANONYMOUS USER EVEN IF USER IS NOT LOGGED IN
         $this->assertInstanceOf(UserInterface::class, $return->getUser());
         $this->assertEquals('anonymous', $return->getUser()->getUsername());
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testDeleteTask()
     {
-        //$taskService = $this->initService();
+        $task = $this->createNewTask();
 
-        //$taskService->deleteTask()
+        ################## TEST WITH TASK USER = LOGGED USER ####################################@
+        // MOCK CURRENT USER
+        $userservice = $this->createMock(UserService::class);
+        $userservice
+            ->expects($this->any())
+            ->method('getCurrentUser')
+            ->willReturn($this->createNewUser(45, 'test', ['ROLE_USER']));
+
+        // MOCK OBJECT MANAGER
+        $manager = $this->createMock(ObjectManager::class);
+        $manager
+            ->expects($this->any())
+            ->method('remove')
+            ->willReturn(true);
+        $manager
+            ->method('flush')
+            ->willReturn(true);
 
 
+        $taskService = $this->initService([
+            'userService' => $userservice,
+            'objectManager' => $manager
+        ]);
+
+        $this->assertTrue($taskService->deleteTask($task));
+
+        ################## TEST WITH TASK USER != LOGGED USER ####################################@
+        // MOCK CURRENT USER
+        $userservice = $this->createMock(UserService::class);
+        $userservice
+            ->expects($this->any())
+            ->method('getCurrentUser')
+            ->willReturn($this->createNewUser(89, 'test', ['ROLE_USER']));
+
+        $taskService = $this->initService([
+            'userService' => $userservice,
+            'objectManager' => $manager
+        ]);
+
+        $this->assertFalse($taskService->deleteTask($task));
+
+        ################## TEST WITH  NO USER LOGGED IN ####################################@
+        // MOCK CURRENT USER
+        $userservice = $this->createMock(UserService::class);
+        $userservice
+            ->expects($this->any())
+            ->method('getCurrentUser')
+            ->willReturn(null);
+
+        $taskService = $this->initService([
+            'userService' => $userservice,
+            'objectManager' => $manager
+        ]);
+
+        $this->assertFalse($taskService->deleteTask($task));
     }
+
 
     protected function initService(array $mock = null): TaskService
     {
@@ -99,10 +158,7 @@ class TaskServiceTest extends KernelTestCase
         $taskService = new TaskService($objectManager, $userService);
 
         return $taskService;
-
     }
-
-
     protected function getContainer()
     {
         self::bootKernel();
@@ -111,7 +167,6 @@ class TaskServiceTest extends KernelTestCase
 
         return $container;
     }
-
     /**
      * @return Task
      * @throws \Exception
@@ -124,7 +179,6 @@ class TaskServiceTest extends KernelTestCase
             ->setTitle('Ma Tache de Test qui tes unit')
             ->setContent('Contenu de ma tache de test');
     }
-
     /**
      * @param string $username
      * @return User
@@ -136,6 +190,32 @@ class TaskServiceTest extends KernelTestCase
                 ->get('doctrine')
                 ->getRepository(User::class)
                 ->findOneby(['username' => $username]);
+
+        return $user;
+    }
+
+    /**
+     * @return Task
+     * @throws \Exception
+     */
+    protected function createNewTask()
+    {
+        $task = (new Task())
+            ->setUser($this->createNewUser(45, 'usertest', ['ROLE_USER']))
+            ->setId(789)
+            ->setContent('Le COntenu')
+            ->setTitle('Un Titre de test');
+
+        return $task;
+    }
+
+    protected function createNewUser($id, $username, $roles): User
+    {
+        $user = (new User())
+            ->setId($id)
+            ->setRoles($roles)
+            ->setEmail($username.'@test.com')
+            ->setUsername($username);
 
         return $user;
     }

@@ -10,6 +10,7 @@ namespace App\Tests\Controller;
 
 use App\Entity\Task;
 use App\Entity\User;
+use App\Repository\TaskRepository;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;

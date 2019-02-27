@@ -40,10 +40,41 @@ class TaskService
         return $task;
     }
 
+    /**
+     * DELETE TASK  AFTER CHECK USER
+     * @param Task $task
+     * @return bool
+     */
     public function deleteTask(Task $task)
     {
-        // WE GET THE CURRENT USER
+        // CHECK IF USER LOGGED IN == TASK USER
+        if ($this->isUserCanDeleteThisTask($task)) {
+            $this->manager->remove($task);
+            $this->manager->flush();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * CHECK IF LOGGED USER  = TASK USER
+     * @param Task $task
+     * @return bool
+     */
+    protected function isUserCanDeleteThisTask(Task $task): bool
+    {
+        // GET CURRENT USER
         $currentUser = $this->userService->getCurrentUser();
-        //dd($currentUser);
+
+        // GET TASK USER
+        $taskUser = $task->getUser();
+
+        if (null !== $currentUser && $currentUser->getId() === $taskUser->getId()) {
+            return true;
+        }
+
+        return false;
     }
 }

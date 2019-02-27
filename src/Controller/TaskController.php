@@ -90,11 +90,12 @@ class TaskController extends AbstractController
     public function deleteTaskAction(Task $task, TaskService $taskService)
     {
         $delete = $taskService->deleteTask($task);
-        $emanager = $this->getDoctrine()->getManager();
-        $emanager->remove($task);
-        $emanager->flush();
 
-        $this->addFlash('success', 'La tâche a bien été supprimée.');
+        if ($delete) {
+            $this->addFlash('success', 'La tâche a bien été supprimée.');
+        }
+
+        $this->addFlash('error', 'Une erreur s\'est produite lors de la suppression');
 
         return $this->redirectToRoute('task_list');
     }
