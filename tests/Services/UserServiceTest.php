@@ -17,7 +17,6 @@ use Symfony\Component\Security\Core\Security;
 
 class UserServiceTest extends KernelTestCase
 {
-
     public function testCreate()
     {
         // MOCK OBJECT MANAGER

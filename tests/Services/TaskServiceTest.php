@@ -12,7 +12,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class TaskServiceTest extends KernelTestCase
 {
-
     public function testCreateNewtask()
     {
         // TEST CREATE TASK WITH USR LOGED IN
