@@ -77,7 +77,7 @@ class TaskService
             return true;
         }
 
-        if (null !== $currentUser && $currentUser->getId() === $taskUser->getId()) {
+        if (null !== $currentUser && $currentUser->getUsername() === $taskUser->getUsername()) {
             return true;
         }
 
