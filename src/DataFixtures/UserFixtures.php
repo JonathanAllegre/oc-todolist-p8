@@ -13,7 +13,6 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Core\Security;
 
 class UserFixtures extends Fixture implements FixtureGroupInterface
 {
@@ -39,8 +38,8 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
      */
     public function load(ObjectManager $manager)
     {
-        $this->newUser('jonathan', 'test', 'admin.admin@snowtrick.test');
-        $anonymous = $this->newUser('Anonymous', 'test', 'anonymous@anonymous.com');
+        $this->newUser('jonathan', 'test', 'admin.admin@snowtrick.test', ['ROLE_USER']);
+        $anonymous = $this->newUser('Anonymous', 'test', 'anonymous@anonymous.com', ['ROLE_USER']);
 
         $this->addReference(self::ANONYMOUS_USER, $anonymous);
     }
@@ -52,13 +51,14 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
      * @return User
      * @throws \Exception
      */
-    public function newUser($name, $pass, $mail):User
+    public function newUser($name, $pass, $mail, $role):User
     {
         $user = new User();
         $user
             ->setUsername($name)
             ->setPassword($this->encoder->encodePassword($user, $pass))
-            ->setEmail($mail);
+            ->setEmail($mail)
+            ->setRoles($role);
 
         $this->manager->persist($user);
         $this->manager->flush();

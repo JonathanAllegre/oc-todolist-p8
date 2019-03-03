@@ -6,10 +6,7 @@ use App\Entity\Task;
 use App\Entity\User;
 use App\Services\TaskService;
 use Doctrine\Common\Persistence\ObjectManager;
-use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Bundle\FrameworkBundle\Tests\Command\CacheClearCommand\Fixture\TestAppKernel;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class TaskServiceTest extends KernelTestCase
@@ -41,8 +38,6 @@ class TaskServiceTest extends KernelTestCase
     private function getContainer()
     {
         self::bootKernel();
-        // returns the real and unchanged service container
-        $container = self::$kernel->getContainer();
         // gets the special container that allows fetching private services
         $container = self::$container;
 
@@ -50,6 +45,10 @@ class TaskServiceTest extends KernelTestCase
     }
 
     // PARAMS
+    /**
+     * @return Task
+     * @throws \Exception
+     */
     public function getParamsForCreateNewTask(): Task
     {
         return (new Task())

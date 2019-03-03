@@ -50,8 +50,10 @@ class UserControllerTest extends WebTestCase
         $form['user[password][first]'] = "test";
         $form['user[password][second]'] = "test";
         $form['user[email]'] = "test@test.com";
+        $form['user[roles][1]'] = "ROLE_USER";
 
-        $crawler = $this->client->submit($form);
+
+        $this->client->submit($form);
         $crawler = $this->client->followRedirect();
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
@@ -65,6 +67,7 @@ class UserControllerTest extends WebTestCase
 
     public function testEditAction()
     {
+
         $user = $this
             ->getContainer()
             ->get('doctrine')
@@ -84,7 +87,8 @@ class UserControllerTest extends WebTestCase
         $form = $crawler->selectButton('Modifier')->form();
 
         $form['user[username]'] = "UtilisateurTestModifié";
-        $crawler = $this->client->submit($form);
+
+        $this->client->submit($form);
         $crawler = $this->client->followRedirect();
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
@@ -100,10 +104,6 @@ class UserControllerTest extends WebTestCase
     private function getContainer()
     {
         self::bootKernel();
-
-        // returns the real and unchanged service container
-        $container = self::$kernel->getContainer();
-
         // gets the special container that allows fetching private services
         $container = self::$container;
 
