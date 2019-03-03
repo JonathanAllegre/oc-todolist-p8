@@ -157,8 +157,30 @@ class TaskControllerTest extends WebTestCase
     }
     public function testDeleteTaskAction()
     {
-        $this->login($this->client);
 
+        // TEST WTHOUT LOGGED USER
+        $task = $this
+            ->getContainer()
+            ->get('doctrine')
+            ->getRepository(Task::class)
+            ->findOneByTitle('TaskForDeleteAction');
+
+        $this->client->request('GET', '/tasks/'. $task->getId() .'/delete');
+        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+
+        $crawler = $this->client->followRedirect();
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        $this->assertGreaterThan(
+            0,
+            $crawler
+                ->filter('html:contains("Oops ! Une erreur s\'est produite lors de la suppression")')
+                ->count()
+        );
+
+
+        // TEST WITH LOGGED USER
+        $this->login($this->client);
         $task = $this
             ->getContainer()
             ->get('doctrine')
