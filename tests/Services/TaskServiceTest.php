@@ -134,7 +134,7 @@ class TaskServiceTest extends KernelTestCase
         $this->assertFalse($taskService->deleteTask($task));
 
 
-        ################## TEST WITH  LOGGED USER = ADMIN & TASKUSER = anonymous ####################
+        ################## TEST WITH  LOGGED USER HAS ADMIN ROLE & TASKUSER = anonymous ####################
         $user = $this->createNewUser('anonymous', ['ROLE_ANONYMOUS']);
         $task = $this->createNewTask($user, 'LeCOntenu', 'LeTitle');
 
@@ -144,6 +144,10 @@ class TaskServiceTest extends KernelTestCase
             ->expects($this->any())
             ->method('getCurrentUser')
             ->willReturn($this->createNewUser('admin', ['ROLE_ADMIN']));
+        $userservice
+            ->expects($this->any())
+            ->method('userHasAdminRole')
+            ->willReturn(true);
 
         $taskService = $this->initService([
             'userService' => $userservice,
@@ -151,6 +155,29 @@ class TaskServiceTest extends KernelTestCase
         ]);
 
         $this->assertTrue($taskService->deleteTask($task));
+
+
+        ################## TEST WITH  LOGGED USER HAVEN'T ADMIN ROLE & TASKUSER = anonymous ####################
+        $user = $this->createNewUser('anonymous', ['ROLE_ANONYMOUS']);
+        $task = $this->createNewTask($user, 'LeCOntenu', 'LeTitle');
+
+        // MOCK CURRENT USER
+        $userservice = $this->createMock(UserService::class);
+        $userservice
+            ->expects($this->any())
+            ->method('getCurrentUser')
+            ->willReturn($this->createNewUser('admin', ['ROLE_ADMIN']));
+        $userservice
+            ->expects($this->any())
+            ->method('userHasAdminRole')
+            ->willReturn(false);
+
+        $taskService = $this->initService([
+            'userService' => $userservice,
+            'objectManager' => $manager
+        ]);
+
+        $this->assertFalse($taskService->deleteTask($task));
     }
 
     // INIT CLASS

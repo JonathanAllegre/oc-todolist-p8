@@ -86,6 +86,23 @@ class UserService
     }
 
     /**
+     * CHECK IF USER HAS ADMIN ROLE
+     * @param User $user
+     * @return bool
+     */
+    public function userHasAdminRole(User $user): bool
+    {
+        foreach ($user->getRoles() as $userRole) {
+            if ('ROLE_ADMIN' ===$userRole) {
+                dump($userRole);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * RETURN AN ANONYMOUS USER
      * @return User
      */
