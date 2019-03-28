@@ -74,8 +74,8 @@ class TaskServiceTest extends KernelTestCase
     }
     public function testDeleteTask()
     {
-        $user = $this->createNewUser(45, 'usertest', ['ROLE_USER']);
-        $task = $this->createNewTask(45, $user, 'le contenu', 'Le Titre');
+        $user = $this->createNewUser('usertest', ['ROLE_USER']);
+        $task = $this->createNewTask($user, 'le contenu', 'Le Titre');
 
         ################## TEST WITH TASK USER = LOGGED USER ####################################@
         // MOCK CURRENT USER
@@ -83,7 +83,7 @@ class TaskServiceTest extends KernelTestCase
         $userservice
             ->expects($this->any())
             ->method('getCurrentUser')
-            ->willReturn($this->createNewUser(45, 'test', ['ROLE_USER']));
+            ->willReturn($user);
 
         // MOCK OBJECT MANAGER
         $manager = $this->createMock(ObjectManager::class);
@@ -109,7 +109,7 @@ class TaskServiceTest extends KernelTestCase
         $userservice
             ->expects($this->any())
             ->method('getCurrentUser')
-            ->willReturn($this->createNewUser(89, 'test', ['ROLE_USER']));
+            ->willReturn($this->createNewUser('test', ['ROLE_USER']));
 
         $taskService = $this->initService([
             'userService' => $userservice,
@@ -134,16 +134,20 @@ class TaskServiceTest extends KernelTestCase
         $this->assertFalse($taskService->deleteTask($task));
 
 
-        ################## TEST WITH  LOGGED USER = ADMIN & TASKUSER = anonymous ####################
-        $user = $this->createNewUser(789, 'anonymous', ['ROLE_ANONYMOUS']);
-        $task = $this->createNewTask(78, $user, 'LeCOntenu', 'LeTitle');
+        ################## TEST WITH  LOGGED USER HAS ADMIN ROLE & TASKUSER = anonymous ####################
+        $user = $this->createNewUser('anonymous', ['ROLE_ANONYMOUS']);
+        $task = $this->createNewTask($user, 'LeCOntenu', 'LeTitle');
 
         // MOCK CURRENT USER
         $userservice = $this->createMock(UserService::class);
         $userservice
             ->expects($this->any())
             ->method('getCurrentUser')
-            ->willReturn($this->createNewUser(45, 'admin', ['ROLE_ADMIN']));
+            ->willReturn($this->createNewUser('admin', ['ROLE_ADMIN']));
+        $userservice
+            ->expects($this->any())
+            ->method('userHasAdminRole')
+            ->willReturn(true);
 
         $taskService = $this->initService([
             'userService' => $userservice,
@@ -151,6 +155,29 @@ class TaskServiceTest extends KernelTestCase
         ]);
 
         $this->assertTrue($taskService->deleteTask($task));
+
+
+        ################## TEST WITH  LOGGED USER HAVEN'T ADMIN ROLE & TASKUSER = anonymous ####################
+        $user = $this->createNewUser('anonymous', ['ROLE_ANONYMOUS']);
+        $task = $this->createNewTask($user, 'LeCOntenu', 'LeTitle');
+
+        // MOCK CURRENT USER
+        $userservice = $this->createMock(UserService::class);
+        $userservice
+            ->expects($this->any())
+            ->method('getCurrentUser')
+            ->willReturn($this->createNewUser('admin', ['ROLE_ADMIN']));
+        $userservice
+            ->expects($this->any())
+            ->method('userHasAdminRole')
+            ->willReturn(false);
+
+        $taskService = $this->initService([
+            'userService' => $userservice,
+            'objectManager' => $manager
+        ]);
+
+        $this->assertFalse($taskService->deleteTask($task));
     }
 
     // INIT CLASS
@@ -201,20 +228,18 @@ class TaskServiceTest extends KernelTestCase
     }
 
     // MOCK
-    protected function createNewTask($id, $user, $content, $title)
+    protected function createNewTask($user, $content, $title)
     {
         $task = (new Task())
             ->setUser($user)
-            ->setId($id)
             ->setContent($content)
             ->setTitle($title);
 
         return $task;
     }
-    protected function createNewUser($id, $username, $roles): User
+    protected function createNewUser($username, $roles): User
     {
         $user = (new User())
-            ->setId($id)
             ->setRoles($roles)
             ->setEmail($username.'@test.com')
             ->setUsername($username);

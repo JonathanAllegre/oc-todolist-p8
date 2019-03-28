@@ -56,6 +56,29 @@ class UserServiceTest extends KernelTestCase
         // ONLY CHECK IF PASSWORD IS ENCODED
         $this->assertNotEquals('test', $result->getPassword());
     }
+    public function testIsAdmin()
+    {
+        // MUST RETURN TRUE ( USER HAVE ADMIN ROLE )
+        $user = $this->createNewUser('test', 't@t.com', 'p', ['ROLE_USER','ROLE_ADMIN']);
+        $userService = $this->initService();
+        $this->assertTrue($userService->userHasAdminRole($user));
+
+        // MUST RETURN FALSE ( NO ADMIN ROLE FOR CURRENT USER )
+        $user = $this->createNewUser('test', 't@t.com', 'p', ['ROLE_USER','ROLE_ANONYMOUS']);
+        $userService = $this->initService();
+        $this->assertFalse($userService->userHasAdminRole($user));
+    }
+
+    private function createNewUser($username, $mail, $pass, $roles)
+    {
+        $user = (new User())
+            ->setUsername($username)
+            ->setEmail($mail)
+            ->setPassword($pass)
+            ->setRoles($roles);
+
+        return $user;
+    }
 
     private function getContainer()
     {

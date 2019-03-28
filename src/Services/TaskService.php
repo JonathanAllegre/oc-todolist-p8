@@ -73,11 +73,11 @@ class TaskService
 
         if (null !== $currentUser
             && 'anonymous' === $taskUser->getUsername()
-            && 'admin'=== $currentUser->getUsername()) {
+            && true === $this->userService->userHasAdminRole($currentUser)) {
             return true;
         }
 
-        if (null !== $currentUser && $currentUser->getId() === $taskUser->getId()) {
+        if (null !== $currentUser && $currentUser->getUsername() === $taskUser->getUsername()) {
             return true;
         }
 
