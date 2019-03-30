@@ -1,4 +1,5 @@
-# Todo-List OC 
+# Todo-List OC
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/386a33a478b3481d921fdbb18a5c9dc5)](https://www.codacy.com/app/JonathanAllegre/oc-todolist-p8?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=JonathanAllegre/oc-todolist-p8&amp;utm_campaign=Badge_Grade)
 
 The 8th project of the OpenClassRoom training: PHP / Symfony application developer  
 
