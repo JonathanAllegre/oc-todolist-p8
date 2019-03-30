@@ -17,10 +17,16 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class UserFixtures extends Fixture implements FixtureGroupInterface
 {
     private $encoder;
+    private $manager;
 
-    public function __construct(UserPasswordEncoderInterface $encoder)
+    public const ANONYMOUS_USER = 'anonymous_user';
+    public const USER_USER = 'user_user';
+    public const ADMIN_USER = 'admin_user';
+
+    public function __construct(ObjectManager $manager, UserPasswordEncoderInterface $encoder)
     {
         $this->encoder = $encoder;
+        $this->manager = $manager;
     }
 
     /**
@@ -29,17 +35,16 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
      */
     public function load(ObjectManager $manager)
     {
-        $user = $this->newUser('jonathan', 'test', 'admin.admin@snowtrick.test', ['ROLE_USER']);
-        $manager -> persist($user);
-        $manager -> flush();
+        $user = $this->newUser('user', 'test', 'user.user@user.test', ['ROLE_USER']);
+        $admin = $this->newUser('admin', 'admin', 'admin.admin@admin.test', ['ROLE_ADMIN']);
+        $anonymous = $this->newUser('anonymous', 'anonymous', 'anonymous.anonymous@anonymous.test', ['ROLE_ANONYMOUS']);
 
-        $user = $this->newUser('jonathan-test', 'test', 'admin.adminjk@snowtrick.test', ['ROLE_USER']);
-        $manager -> persist($user);
-        $manager -> flush();
+        $this->addReference(self::ANONYMOUS_USER, $anonymous);
+        $this->addReference(self::ADMIN_USER, $admin);
+        $this->addReference(self::USER_USER, $user);
 
-        $user = $this->newUser('userTestForEdit', 'test', 'testEdit.admin@snowtrick.test', ['ROLE_USER']);
-        $manager -> persist($user);
-        $manager -> flush();
+        // USER FOR FUNCTIONAL TEST
+        $this->newUser('UserForEditaction', 'test', 'UserForEditaction.user@user.test', ['ROLE_USER']);
     }
 
     /**
@@ -56,6 +61,9 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
             ->setUsername($name)
             ->setEmail($mail)
             ->setRoles($roles);
+
+        $this->manager->persist($user);
+        $this->manager->flush();
 
         return $user;
     }

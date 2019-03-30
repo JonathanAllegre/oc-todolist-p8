@@ -31,8 +31,6 @@ class DefaultControllerTest extends WebTestCase
     public function testIndexNoLogin()
     {
         $this->client->request('GET', '/');
-        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
-        $this->client->followRedirect();
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 

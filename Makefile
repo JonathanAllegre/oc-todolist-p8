@@ -14,16 +14,16 @@ composer.lock: composer.json
 vendor: composer.lock
 	composer install
 
-install: vendor ## Lance l'installation de l'application
+install: vendor ## Launch install
 
-database-create: install ## Creer La bdd
+database-create: install ## Create DB
 	php ./bin/console doctrine:database:create
 	php ./bin/console doctrine:schema:create
 
-database-update:database-update-test ## Update la Base de donnée
+database-update:database-update-test ## Update DB
 	php ./bin/console doctrine:schema:update --force --env dev
 
-database-update-test: ## Update la Base de donnée
+database-update-test: ## Update Test DB
 	php ./bin/console doctrine:schema:update --force --env test
 
 cc: cc-test cc-prod cc-dev ## Clear All Cache
@@ -37,25 +37,19 @@ cc-dev: ## Clear Cache dev
 cc-prod: ## Clear Cache prod
 	rm -rf ./var/cache/prod
 
-fixture-test: install ## Lance les fixtures de test dans la bdd test
+fixture-test: install ## Test Fixtures
 	php ./bin/console doctrine:fixture:load --group test --no-interaction --env test
 
-fixture: install ## Installe les fixture dans la bdd
+fixture: install ## Dev & Prod Fixtures
 	php ./bin/console doctrine:fixture:load --group devprod --no-interaction
 
-test: install fixture-test ## Lance phpUnit
+test: install fixture-test ## Run PHPUnit
 	php ./bin/phpunit
 
-test-coverage: install fixture-test ## Lance PhpUnit With Coverage HTML
+test-coverage: install fixture-test ## Run PHPUnit With Coverage
 	php ./bin/phpunit --coverage-html ./public/coverage/
 
-test-filter: install fixture-test ## Lance tests with filter [CLASS=YourClassTest] [METHOD=testYourMethod]
+test-filter: install fixture-test ## Run PHPUnit With Filter [CLASS=YourClassTest] [METHOD=testYourMethod]
 	php ./bin/phpunit --filter $(CLASS)::$(METHOD)
-
-behat: install fixture-test ## Lance les test fonctionnel Behat
-	APP_ENV=test ./vendor/bin/behat
-
-behat-filter: install fixture-test ## Run Behat test only with @filter tag
-	APP_ENV=test ./vendor/bin/behat --tags @filter
 
 go-travis: database-create test ## Make TravisCI Jobs

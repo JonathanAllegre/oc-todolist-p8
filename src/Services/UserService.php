@@ -11,16 +11,20 @@ namespace App\Services;
 use App\Entity\User;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserService
 {
     private $manager;
     private $encoder;
+    private $security;
 
-    public function __construct(ObjectManager $manager, UserPasswordEncoderInterface $encoder)
+    public function __construct(ObjectManager $manager, UserPasswordEncoderInterface $encoder, Security $security)
     {
         $this->manager = $manager;
         $this->encoder = $encoder;
+        $this->security = $security;
     }
 
     /**
@@ -70,5 +74,42 @@ class UserService
         $pass = $this->encoder->encodePassword($user, $user->getPassword());
 
         return $pass;
+    }
+
+    /**
+     * RETOURN THE CURRENT USER
+     * @return User|null
+     */
+    public function getCurrentUser(): ?UserInterface
+    {
+        return $this->security->getUser();
+    }
+
+    /**
+     * CHECK IF USER HAS ADMIN ROLE
+     * @param User $user
+     * @return bool
+     */
+    public function userHasAdminRole(User $user): bool
+    {
+        foreach ($user->getRoles() as $userRole) {
+            if ('ROLE_ADMIN' ===$userRole) {
+                dump($userRole);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * RETURN AN ANONYMOUS USER
+     * @return User
+     */
+    public function getAnonymousUser(): User
+    {
+        $anonymousUser = $this->manager->getRepository(User::class)->findOneBy(['username' => 'anonymous']);
+
+        return $anonymousUser;
     }
 }

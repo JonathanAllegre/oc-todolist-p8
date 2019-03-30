@@ -38,7 +38,7 @@ class TaskController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $taskService->createNewTask($this->getUser(), $task);
+            $taskService->createNewTask($task);
 
             $this->addFlash('success', 'La tâche a été bien été ajoutée.');
 
@@ -87,13 +87,17 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{id}/delete", name="task_delete")
      */
-    public function deleteTaskAction(Task $task)
+    public function deleteTaskAction(Task $task, TaskService $taskService)
     {
-        $emanager = $this->getDoctrine()->getManager();
-        $emanager->remove($task);
-        $emanager->flush();
+        $delete = $taskService->deleteTask($task);
 
-        $this->addFlash('success', 'La tâche a bien été supprimée.');
+        if ($delete) {
+            $this->addFlash('success', 'La tâche a bien été supprimée.');
+
+            return $this->redirectToRoute('task_list');
+        }
+
+        $this->addFlash('error', 'Une erreur s\'est produite lors de la suppression');
 
         return $this->redirectToRoute('task_list');
     }
